@@ -128,9 +128,6 @@ def get_euclid_per_coord(ytrue, ypred):
     return np.array(dist_max), np.array(dist_mean), np.array(dist_std)
 
 
-
-
-
 if __name__ == "__main__":
     ORDERED_BY = "Kullback"
     positioning_metrics = "../outputs/positioning_metrics"
@@ -200,8 +197,8 @@ if __name__ == "__main__":
     print("TRAINING SIN RPMAP")
     print("=======================================================")
     for n_rep in tqdm.tqdm(range(n_repeats)):
-        sin_rpmap_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain, ytrain)
-        sin_rpmap_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain, ytrain)
+        sin_rpmap_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain, ytrain)
+        sin_rpmap_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain, ytrain)
 
         sin_rpmap_knn_preds = sin_rpmap_knn.predict(Xtest)
         sin_rpmap_rf_preds = sin_rpmap_rf.predict(Xtest)
@@ -221,8 +218,10 @@ if __name__ == "__main__":
     print("=======================================================")
 
     for n_rep in tqdm.tqdm(range(n_repeats)):
-        rpmap_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_rpmap, ytrain_rpmap)
-        rpmap_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_rpmap, ytrain_rpmap)
+        rpmap_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_rpmap,
+                                                                                                 ytrain_rpmap)
+        rpmap_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_rpmap,
+                                                                                                   ytrain_rpmap)
 
         rpmap_knn_preds = rpmap_knn.predict(Xtest)
         rpmap_rf_preds = rpmap_rf.predict(Xtest)
@@ -250,14 +249,20 @@ if __name__ == "__main__":
         [Xtrain_cgan, ytrain_cgan], [Xtrain_wcgan, ytrain_wcgan], [Xtrain_wcgan_gp, ytrain_wcgan_gp] = generated_da
 
         # TRAINING CON GANS
-        cgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_cgan, ytrain_cgan)
-        cgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_cgan, ytrain_cgan)
+        cgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_cgan,
+                                                                                                ytrain_cgan)
+        cgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_cgan,
+                                                                                                  ytrain_cgan)
 
-        wcgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_wcgan, ytrain_wcgan)
-        wcgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_wcgan, ytrain_wcgan)
+        wcgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan,
+                                                                                                 ytrain_wcgan)
+        wcgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan,
+                                                                                                   ytrain_wcgan)
 
-        wcgan_gp_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_wcgan_gp, ytrain_wcgan_gp)
-        wcgan_gp_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_wcgan_gp, ytrain_wcgan_gp)
+        wcgan_gp_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan_gp,
+                                                                                                    ytrain_wcgan_gp)
+        wcgan_gp_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan_gp,
+                                                                                                      ytrain_wcgan_gp)
 
         # PREDICCIONES CON GANS
         cgan_knn_preds = cgan_knn.predict(Xtest)
@@ -319,14 +324,20 @@ if __name__ == "__main__":
         [Xtrain_cgan, ytrain_cgan], [Xtrain_wcgan, ytrain_wcgan], [Xtrain_wcgan_gp, ytrain_wcgan_gp] = generated_syn
 
         # TRAINING CON GANS
-        cgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_cgan, ytrain_cgan)
-        cgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_cgan, ytrain_cgan)
+        cgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_cgan,
+                                                                                                ytrain_cgan)
+        cgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_cgan,
+                                                                                                  ytrain_cgan)
 
-        wcgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_wcgan, ytrain_wcgan)
-        wcgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_wcgan, ytrain_wcgan)
+        wcgan_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan,
+                                                                                                 ytrain_wcgan)
+        wcgan_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan,
+                                                                                                   ytrain_wcgan)
 
-        wcgan_gp_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count()-3).fit(Xtrain_wcgan_gp, ytrain_wcgan_gp)
-        wcgan_gp_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count()-3).fit(Xtrain_wcgan_gp, ytrain_wcgan_gp)
+        wcgan_gp_knn = sk.neighbors.KNeighborsRegressor(n_neighbors=15, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan_gp,
+                                                                                                    ytrain_wcgan_gp)
+        wcgan_gp_rf = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_wcgan_gp,
+                                                                                                      ytrain_wcgan_gp)
 
         # PREDICCIONES CON GANS
         cgan_knn_preds = cgan_knn.predict(Xtest)
@@ -351,18 +362,18 @@ if __name__ == "__main__":
                                                                                                 ytest)
 
         models.loc[len(models)] = ["cGAN (SYN)-KNN", n_rep, cgan_knn_mean_eucl, cgan_knn_rmse, cgan_knn_mse,
-                                      cgan_knn_mae]
+                                   cgan_knn_mae]
         models.loc[len(models)] = ["cGAN (SYN)-RF", n_rep, cgan_rf_mean_eucl, cgan_rf_rmse, cgan_rf_mse, cgan_rf_mae]
 
         models.loc[len(models)] = ["WcGAN (SYN)-KNN", n_rep, wcgan_knn_mean_eucl, wcgan_knn_rmse, wcgan_knn_mse,
-                                        wcgan_knn_mae]
+                                   wcgan_knn_mae]
         models.loc[len(models)] = ["WcGAN (SYN)-RF", n_rep, wcgan_rf_mean_eucl, wcgan_rf_rmse, wcgan_rf_mse,
-                                        wcgan_rf_mae]
+                                   wcgan_rf_mae]
         models.loc[len(models)] = ["WcGAN-GP (SYN)-KNN", n_rep, wcgan_gp_knn_mean_eucl, wcgan_gp_knn_rmse,
-                                        wcgan_gp_knn_mse,
-                                        wcgan_gp_knn_mae]
+                                   wcgan_gp_knn_mse,
+                                   wcgan_gp_knn_mae]
         models.loc[len(models)] = ["WcGAN-GP (SYN)-RF", n_rep, wcgan_gp_rf_mean_eucl, wcgan_gp_rf_rmse, wcgan_gp_rf_mse,
-                                        wcgan_gp_rf_mae]
+                                   wcgan_gp_rf_mae]
 
         if n_rep == 0:
             plot_circles_around_points(cgan_knn_preds, ytest, f"{radio_plots}/cgan_SYN_knn.png")
@@ -397,4 +408,3 @@ if __name__ == "__main__":
     # ordenar por la media de la distancia euclidea
     tabla_medias_std = tabla_medias_std.sort_values("Mean_Euclidean_Dist")
     tabla_medias_std.to_csv(f"{metrics}/tabla_resultados.csv", index=False)
-

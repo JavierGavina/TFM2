@@ -34,7 +34,7 @@ def get_metrics(y_pred, y_true):
 
 def get_euclid_per_coord(ytrue, ypred):
     euclidean_distances = np.sqrt(np.sum((ypred - ytrue) ** 2, axis=1))
-    coords_unique = np.array(list(constants.labels_dictionary_meters_test.values()))
+    coords_unique = np.unique(ytrue, axis=0)
     dist_max, dist_mean, dist_std = [], [], []
     for coord in coords_unique:
         indices = np.where(np.all(ytrue == coord, axis=1))[0]
