@@ -189,12 +189,14 @@ def main():
     tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tablas/tabla_metricas_per_coord.csv", index=False)
 
     aux = tabla_metricas_per_coord.copy()
+    y_max = np.ceil(np.max(aux["Mean Euclid"] + aux["Std Euclid"]))+0.5
+    y_min = np.floor(np.min(aux["Mean Euclid"] - aux["Std Euclid"]))
     colores = ["orange", "green", "purple"]
-    plt.figure(figsize=(10, 20))
+    plt.figure(figsize=(10, 15))
     for idx, partition in enumerate(aux.Partition.unique()):
         aux_partition = aux[aux.Partition == partition]
         plt.subplot(3, 1, idx + 1)
-        plt.title(partition)
+        plt.title(f"Partición: {partition} ")
         for idx_model, model in enumerate(aux_partition.Model.unique()):
             aux_model = aux_partition[aux_partition.Model == model].sort_values(by=["Mean Euclid"])
             xaxis = [x for x in range(1, aux_model.shape[0] + 1)]
@@ -202,7 +204,11 @@ def main():
             plt.errorbar(xaxis, aux_model["Mean Euclid"], yerr=aux_model["Std Euclid"],
                          fmt='o', c=colores[idx_model], capsize=5)
             plt.xticks(xaxis, xaxis)
+        plt.ylim(y_min, y_max)
+        plt.ylabel("Error (m)")
+        plt.xlabel("Ordered Points (by error)")
         plt.legend()
+    plt.tight_layout()
     plt.savefig(f"{path_partitions_output}/plots/errorbar metrics.png")
     plt.show()
 

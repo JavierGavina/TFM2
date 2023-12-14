@@ -74,6 +74,49 @@ def define_generator(latent_dim=100, n_classes=7):
     model = Model([input_latent, input_label], out, name="generator")
     return model
 
+# def define_discriminator(input_shape=(28, 28, 1), n_classes=7):
+#     input_label = Input(shape=(1,), name="input_label")
+#     lab = Embedding(n_classes, 50)(input_label)
+#     lab = Dense(input_shape[0] * input_shape[1] * 1)(lab)
+#     input_image = Input(shape=input_shape, name="input_image")
+#     flatten_image = Flatten()(input_image)
+#     combined = Concatenate(name="concatenate")([flatten_image, lab])
+#
+#     x = Dense(512)(combined)
+#     x = LeakyReLU(alpha=0.2)(x)
+#
+#     x = Dense(256)(x)
+#     x = LeakyReLU(alpha=0.2)(x)
+#
+#     out = Dense(1, activation="sigmoid", name="out_layer")(x)
+#     model = Model([input_image, input_label], out, name="discriminator")
+#
+#     return model
+#
+#
+# def define_generator(latent_dim=100, n_classes=7):
+#     input_label = Input(shape=(1,), name="input_label")
+#     lab = Embedding(n_classes, 50)(input_label)
+#     lab = Dense(4 * 4 * 64)(lab)
+#
+#     input_latent = Input(shape=(latent_dim,), name="input_noise")
+#     x = Dense(4 * 4 * 64)(input_latent)
+#     x = LeakyReLU(alpha=0.2)(x)
+#
+#     combined = Concatenate(name="concatenate")([x, lab])
+#
+#     x = Dense(7 * 7 * 32)(combined)
+#     x = LeakyReLU(alpha=0.2)(x)
+#
+#     x = Dense(14 * 14 * 16)(x)
+#     x = LeakyReLU(alpha=0.2)(x)
+#
+#     x = Dense(28 * 28 * 1, activation="tanh")(x)
+#     out = Reshape((28, 28, 1))(x)
+#
+#     model = Model([input_latent, input_label], out, name="generator")
+#     return model
+
 
 if __name__ == "__main__":
     get_data = dataloader.DataLoader(data_dir=f"../{constants.data.train.FINAL_PATH}/groundtruth.csv",
