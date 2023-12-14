@@ -78,24 +78,6 @@ def main():
     rf_10vs13_pred = rf_10vs13.predict(Xtest_10vs13)
     rf_15vs8_pred = rf_15vs8.predict(Xtest_15vs8)
 
-    _, knn1_mean_euclid_5vs18, knn1_std_euclid_5vs18 = get_euclid_per_coord(ytest_5vs18, knn1_5vs18_pred)
-
-    _, knn1_mean_euclid_10vs13, knn1_std_euclid_10vs13 = get_euclid_per_coord(ytest_10vs13, knn1_10vs13_pred)
-
-    _, knn1_mean_euclid_15vs8, knn1_std_euclid_15vs8 = get_euclid_per_coord(ytest_15vs8, knn1_15vs8_pred)
-
-    _, knn_5mean_euclid_5vs18, knn_5std_euclid_5vs18 = get_euclid_per_coord(ytest_5vs18, knn5_5vs18_pred)
-
-    _, knn_5mean_euclid_10vs13, knn_5std_euclid_10vs13 = get_euclid_per_coord(ytest_10vs13, knn5_10vs13_pred)
-
-    _, knn_5mean_euclid_15vs8, knn_5std_euclid_15vs8 = get_euclid_per_coord(ytest_15vs8, knn5_15vs8_pred)
-
-    _, rf_mean_euclid_5vs18, rf_std_euclid_5vs18 = get_euclid_per_coord(ytest_5vs18, rf_5vs18_pred)
-
-    _, rf_mean_euclid_10vs13, rf_std_euclid_10vs13 = get_euclid_per_coord(ytest_10vs13, rf_10vs13_pred)
-
-    _, rf_mean_euclid_15vs8, rf_std_euclid_15vs8 = get_euclid_per_coord(ytest_15vs8, rf_15vs8_pred)
-
     tabla_metricas_per_coord = pd.DataFrame(columns=["Model", "Partition", "Label", "Mean Euclid"])
     for idx, pos in enumerate(np.unique(ytest_5vs18, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -197,9 +179,13 @@ def main():
              "Std Euclid": std_euclid},
             ignore_index=True)
 
-    print(tabla_metricas_per_coord.sort_values(by=["Model", "Partition", "Label"]).reset_index(drop=True))
+    tabla_metricas = tabla_metricas_per_coord.groupby(["Model", "Partition"]) \
+        .mean()[["Mean Euclid", "Std Euclid"]] \
+        .reset_index()
+    tabla_metricas.to_csv(f"{path_partitions_output}/tablas/tabla_metricas.csv", index=False)
 
     os.makedirs(f"{path_partitions_output}/tablas", exist_ok=True)
+    os.makedirs(f"{path_partitions_output}/plots", exist_ok=True)
     tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tablas/tabla_metricas_per_coord.csv", index=False)
 
     aux = tabla_metricas_per_coord.copy()
@@ -212,12 +198,30 @@ def main():
         for idx_model, model in enumerate(aux_partition.Model.unique()):
             aux_model = aux_partition[aux_partition.Model == model].sort_values(by=["Mean Euclid"])
             xaxis = [x for x in range(1, aux_model.shape[0] + 1)]
-            plt.plot(xaxis, aux_model["Mean Euclid"], label=model, c=colores[idx_model] )
+            plt.plot(xaxis, aux_model["Mean Euclid"], label=model, c=colores[idx_model])
             plt.errorbar(xaxis, aux_model["Mean Euclid"], yerr=aux_model["Std Euclid"],
                          fmt='o', c=colores[idx_model], capsize=5)
-            plt.xticks(xaxis,xaxis)
+            plt.xticks(xaxis, xaxis)
         plt.legend()
+    plt.savefig(f"{path_partitions_output}/plots/errorbar metrics.png")
+    plt.show()
 
+    aux = tabla_metricas.sort_values(by=["Mean Euclid"])
+    aux["Model_Partition"] = aux["Model"] + "-" + aux["Partition"]
+    f = lambda x: "orange" if "KNN(k=1)" in x else "green" if "KNN(k=5)" in x else "purple"
+    # obtener un array de colores usando map
+    colores = list(map(f, aux["Model_Partition"]))
+    labels = list(map(lambda x: x.split("-")[0], aux["Model_Partition"]))
+    plt.figure(figsize=(10, 5))
+    plt.title("Barplot error per each model-partition")
+    plt.bar(aux["Model_Partition"], aux["Mean Euclid"], color=colores)
+    # color yerr
+    plt.errorbar(aux["Model_Partition"], aux["Mean Euclid"], yerr=aux["Std Euclid"], capthick=3, capsize=6, color="black")
+    # customized legend
+    handles = [plt.Rectangle((0, 0), 1, 1, color=c, ec="k") for c in ["orange", "green", "purple"]]
+    plt.legend(handles, ["KNN(k=1)", "KNN(k=5)", "RF"])
+    plt.xticks(rotation=15)
+    plt.savefig(f"{path_partitions_output}/plots/barplot metrics.png")
     plt.show()
 
 

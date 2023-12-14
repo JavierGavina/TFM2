@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="initial push">
-      <change afterPath="$PROJECT_DIR$/positioning/positioning_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/positioning_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/utils.py" afterDir="false" />
+    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="metrics with partitions and line error bar plot">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positioning/positioning_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_partitions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1702476831210</updated>
       <workItem from="1702476832374" duration="808000" />
-      <workItem from="1702544816915" duration="10163000" />
+      <workItem from="1702544816915" duration="12361000" />
     </task>
     <task id="LOCAL-00001" summary="initial push">
       <option name="closed" value="true" />
@@ -130,7 +130,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702546418343</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="metrics with partitions and line error bar plot">
+      <option name="closed" value="true" />
+      <created>1702558980429</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1702558980429</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,9 +169,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial push" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial push" />
+    <MESSAGE value="metrics with partitions and line error bar plot" />
+    <option name="LAST_COMMIT_MESSAGE" value="metrics with partitions and line error bar plot" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$positioning_partitions.coverage" NAME="positioning_partitions Coverage Results" MODIFIED="1702558889857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/positioning" />
+    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$positioning_partitions.coverage" NAME="positioning_partitions Coverage Results" MODIFIED="1702561143154" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/positioning" />
   </component>
 </project>
