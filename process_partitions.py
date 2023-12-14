@@ -21,6 +21,8 @@ part_15vs8 = constants.data.partitions.PARTITION_15VS8
 labels_test_5vs18 = [x for x in range(23) if x not in constants.labels_partition_5vs18]
 labels_test_10vs13 = [x for x in range(23) if x not in constants.labels_partition_10vs13]
 labels_test_15vs8 = [x for x in range(23) if x not in constants.labels_partition_15vs8]
+
+
 def main():
     os.makedirs("partitions", exist_ok=True)
     os.makedirs(part_5vs18, exist_ok=True)
@@ -49,39 +51,46 @@ def main():
     print(f"Partición 5vs18 {constants.labels_partition_5vs18} puntos train")
     print("=======================================")
 
-    part_5v18_train = read_checkpoint(WIFI_CHECKPOINT, constants.labels_partition_5vs18) # Leemos los datos del checkpoint
+    part_5v18_train = read_checkpoint(WIFI_CHECKPOINT,
+                                      constants.labels_partition_5vs18)  # Leemos los datos del checkpoint
     part_5v18_train = correctWifiFP(wifi_data=part_5v18_train,
                                     t_max_sampling=t_max_sampling,
-                                    dict_labels_to_meters=constants.labels_dictionary_meters) # Corregimos los datos de wifi y obtenemos formato fingerprint
+                                    dict_labels_to_meters=constants.labels_dictionary_meters)  # Corregimos los datos de wifi y obtenemos formato fingerprint
 
-    part_5v18_train = fix_na_wifi(part_5v18_train) # Corregimos los datos ausentes wifi (NaN = min - 1)
-    part_5v18_train = interpolacion_pixel_proximo(part_5v18_train, threshold=30) # Interpolamos los datos de wifi
+    part_5v18_train = fix_na_wifi(part_5v18_train)  # Corregimos los datos ausentes wifi (NaN = min - 1)
+    part_5v18_train = interpolacion_pixel_proximo(part_5v18_train, threshold=30)  # Interpolamos los datos de wifi
 
-    part_5v18_train_raw = rolling_mean(part_5v18_train, window_size=30, step=5) # Obtenemos wifi sin escalar los datos a 0 - 1
-    part_5v18_train_raw.to_csv(f"{part_5vs18}/train/raw/raw_radiomap.csv", index=False) # Guardamos los datos en bruto
+    part_5v18_train_raw = rolling_mean(part_5v18_train, window_size=30,
+                                       step=5)  # Obtenemos wifi sin escalar los datos a 0 - 1
+    part_5v18_train_raw.to_csv(f"{part_5vs18}/train/raw/raw_radiomap.csv", index=False)  # Guardamos los datos en bruto
 
-    part_5v18_train_proc = scale_wifi(part_5v18_train) # Obtenemos wifi escalando los datos a 0 - 1
-    part_5v18_train_proc = rolling_mean(part_5v18_train_proc, window_size=30, step=5) # Obtenemos wifi sin escalar los datos a 0 - 1
-    part_5v18_train_proc.to_csv(f"{part_5vs18}/train/processed/processed_radiomap.csv", index=False) # Guardamos los datos procesados
+    part_5v18_train_proc = scale_wifi(part_5v18_train)  # Obtenemos wifi escalando los datos a 0 - 1
+    part_5v18_train_proc = rolling_mean(part_5v18_train_proc, window_size=30,
+                                        step=5)  # Obtenemos wifi sin escalar los datos a 0 - 1
+    part_5v18_train_proc.to_csv(f"{part_5vs18}/train/processed/processed_radiomap.csv",
+                                index=False)  # Guardamos los datos procesados
 
     print("=======================================")
     print(f"Partición 5v18 {labels_test_5vs18} puntos test")
     print("=======================================")
 
-    part_5v18_test = read_checkpoint(WIFI_CHECKPOINT, labels_test_5vs18) # Leemos los datos del checkpoint
+    part_5v18_test = read_checkpoint(WIFI_CHECKPOINT, labels_test_5vs18)  # Leemos los datos del checkpoint
     part_5v18_test = correctWifiFP(wifi_data=part_5v18_test,
                                    t_max_sampling=t_max_sampling,
-                                   dict_labels_to_meters=constants.labels_dictionary_meters) # Corregimos los datos de wifi y obtenemos formato fingerprint
+                                   dict_labels_to_meters=constants.labels_dictionary_meters)  # Corregimos los datos de wifi y obtenemos formato fingerprint
 
-    part_5v18_test = fix_na_wifi(part_5v18_test) # Corregimos los datos ausentes wifi (NaN = min - 1)
-    part_5v18_test = interpolacion_pixel_proximo(part_5v18_test, threshold=30) # Interpolamos los datos de wifi
+    part_5v18_test = fix_na_wifi(part_5v18_test)  # Corregimos los datos ausentes wifi (NaN = min - 1)
+    part_5v18_test = interpolacion_pixel_proximo(part_5v18_test, threshold=30)  # Interpolamos los datos de wifi
 
-    part_5v18_test_raw = rolling_mean(part_5v18_test, window_size=30, step=5) # Obtenemos wifi sin escalar los datos a 0 - 1
-    part_5v18_test_raw.to_csv(f"{part_5vs18}/test/raw/raw_radiomap.csv", index=False) # Guardamos los datos en bruto
+    part_5v18_test_raw = rolling_mean(part_5v18_test, window_size=30,
+                                      step=5)  # Obtenemos wifi sin escalar los datos a 0 - 1
+    part_5v18_test_raw.to_csv(f"{part_5vs18}/test/raw/raw_radiomap.csv", index=False)  # Guardamos los datos en bruto
 
-    part_5v18_test_proc = scale_wifi(part_5v18_test) # Obtenemos wifi escalando los datos a 0 - 1
-    part_5v18_test_proc = rolling_mean(part_5v18_test_proc, window_size=30, step=5) # Obtenemos wifi sin escalar los datos a 0 - 1
-    part_5v18_test_proc.to_csv(f"{part_5vs18}/test/processed/processed_radiomap.csv", index=False) # Guardamos los datos procesados
+    part_5v18_test_proc = scale_wifi(part_5v18_test)  # Obtenemos wifi escalando los datos a 0 - 1
+    part_5v18_test_proc = rolling_mean(part_5v18_test_proc, window_size=30,
+                                       step=5)  # Obtenemos wifi sin escalar los datos a 0 - 1
+    part_5v18_test_proc.to_csv(f"{part_5vs18}/test/processed/processed_radiomap.csv",
+                               index=False)  # Guardamos los datos procesados
 
     print("=======================================")
     print(f"Partición 10vs13 {constants.labels_partition_10vs13} puntos train")
