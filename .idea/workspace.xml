@@ -5,31 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="scaled ylim on errorbar metrics plot">
-      <change afterPath="$PROJECT_DIR$/obtainDataINITandPositioning.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/CVAE.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/CVAE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/cGAN_28_28.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/cGAN_28_28.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/callbacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/callbacks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/gans_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/gans_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/generative_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/generative_metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/wassersteinCGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/wassersteinCGAN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/wasserstein_CGAN_GP.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/wasserstein_CGAN_GP.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/plots/barplot metrics.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/plots/barplot metrics.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/plots/errorbar metrics.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/plots/errorbar metrics.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/positioning_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/positioning_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/positioning_per_coord.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_per_coord.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/positioning_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_process.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/positioning/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/process_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_partitions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/process_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/process_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/dataloader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/imutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/imutils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/preprocess.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/dataloader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +152,7 @@
       <workItem from="1702544816915" duration="14400000" />
       <workItem from="1702580735683" duration="3282000" />
       <workItem from="1702630335998" duration="1542000" />
-      <workItem from="1702631900803" duration="2920000" />
+      <workItem from="1702631900803" duration="3596000" />
     </task>
     <task id="LOCAL-00001" summary="initial push">
       <option name="closed" value="true" />
@@ -233,7 +210,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702586940636</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="scaled ylim on errorbar metrics plot">
+      <option name="closed" value="true" />
+      <created>1702638502250</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1702638502250</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

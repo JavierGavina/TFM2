@@ -6,8 +6,8 @@ import sys
 
 sys.path.append("../../")
 
-from constants import constants
-from preprocess import interpolacion_pixel_proximo, parse_windows
+from utils.constants import constants
+from utils.preprocess import interpolacion_pixel_proximo, parse_windows
 
 warnings.filterwarnings('ignore')
 
