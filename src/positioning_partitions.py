@@ -190,7 +190,7 @@ def main():
     y_max = np.ceil(np.max(aux["Mean Euclid"] + aux["Std Euclid"])) + 0.5
     y_min = np.floor(np.min(aux["Mean Euclid"] - aux["Std Euclid"]))
     colores = ["orange", "green", "purple"]
-    plt.figure(figsize=(10, 15))
+    plt.figure(figsize=(10, 17))
     for idx, partition in enumerate(aux.Partition.unique()):
         aux_partition = aux[aux.Partition == partition]
         plt.subplot(3, 1, idx + 1)
