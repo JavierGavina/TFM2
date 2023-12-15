@@ -247,13 +247,12 @@ Dentro de las constantes, en el script constants.py, es importante definir las s
 <b>constants.data.train.INITIAL_DATA:</b> dirección de los datos iniciales de test.
 <b>constants.data.train.CHECKPOINT_DATA_PATH:</b> dirección de los checkpoints de los datos de test.
 <b>constants.data.train.RAW_OUT_PATH:</b> dirección del radiomap en bruto de test.
-<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de test.
-
-<b>constants.aps:</b> lista con los puntos de acceso WiFi a considerar para la obtención del fingerprint.
-<b>constants.labels_dictionary_meters:</b> diccionario que transforma de label a coordenadas en entrenamiento.
-<b>constants.labels_dictionary_meters_test:</b> diccionario que transforma de label a coordenadas en test.
-<b>constants.labels_train:</b> lista con las labels (puntos de acceso) a considerar en entrenamiento.
-<b>constants.labels_test:</b> lista con las labels (puntos de acceso) a considerar en test.
+<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de test.<br>
+<b>constants.aps:</b> lista con los puntos de acceso WiFi a considerar para la obtención del fingerprint.<br>
+<b>constants.labels_dictionary_meters:</b> diccionario que transforma de label a coordenadas en entrenamiento.<br>
+<b>constants.labels_dictionary_meters_test:</b> diccionario que transforma de label a coordenadas en test.<br>
+<b>constants.labels_train:</b> lista con las labels (puntos de acceso) a considerar en entrenamiento.<br>
+<b>constants.labels_test:</b> lista con las labels (puntos de acceso) a considerar en test.<br>
 <b>constants.T_MAX_SAMPLING:</b> tiempo máximo (en segundos) de muestreo en cada label de entrenamiento.
 <b>constants.T_MAX_SAMPLING_TEST:</b> tiempo máximo (en segundos) de muestreo en cada label de test.
 

@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="README.md mapa plano">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="README.md fixed explanation constants vs 1">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -152,7 +151,7 @@
       <workItem from="1702544816915" duration="14400000" />
       <workItem from="1702580735683" duration="3282000" />
       <workItem from="1702630335998" duration="1542000" />
-      <workItem from="1702631900803" duration="9618000" />
+      <workItem from="1702631900803" duration="9856000" />
     </task>
     <task id="LOCAL-00001" summary="initial push">
       <option name="closed" value="true" />
@@ -242,7 +241,23 @@
       <option name="project" value="LOCAL" />
       <updated>1702642902727</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="README.md flujo preprocesado">
+      <option name="closed" value="true" />
+      <created>1702644805155</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1702644805155</updated>
+    </task>
+    <task id="LOCAL-00013" summary="README.md fixed explanation constants vs 1">
+      <option name="closed" value="true" />
+      <created>1702644917861</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1702644917861</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -279,7 +294,9 @@
     <MESSAGE value="all processes executed in one script" />
     <MESSAGE value="all project structured" />
     <MESSAGE value="README.md mapa plano" />
-    <option name="LAST_COMMIT_MESSAGE" value="README.md mapa plano" />
+    <MESSAGE value="README.md flujo preprocesado" />
+    <MESSAGE value="README.md fixed explanation constants vs 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="README.md fixed explanation constants vs 1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$obtainDataINITandPositioning__1_.coverage" NAME="obtainDataINITandPositioning (1) Coverage Results" MODIFIED="1702634443256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
