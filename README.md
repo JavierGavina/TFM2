@@ -366,3 +366,35 @@ Para el correcto funcionamiento del script process_partitions.py. Hay que asegur
 <b>constants.data.partitions.PARTITION_10VS13:</b> directorio de salida de la partición 10 vs 13 <br>
 <b>constants.data.partitions.PARTITION_15VS8:</b> directorio de salida de la partición 15 vs 8 <br>
 
+## Estimación de la posición
+
+Para la estimación de la posición, se ha implementado el script <b>positioning_partitions.py</b>, dentro del directorio <b>src</b>.
+Este script se encarga de realizar la estimación de la posición en cada una de las particiones de train, y de devolver las tablas de métricas y las gráficas de error de posicionamiento en el directorio <b> outputs/positioning_partitions</b>.
+
+```python
+root
+|
+|----data
+|
+|---- src
+|    
+|---- outputs 
+|      |---- positioning_partitions **
+|      |       |---- tablas **
+|      |       |       |---- tabla_metricas.csv **
+|      |       |       |---- tabla_metricas_per_coord.csv **
+|      |       |       
+|      |       |---- plots **
+|      |               |---- barplot metrics.png **
+|      |               |---- errorbar metrics.png **
+```
+
+Una vez ejecutamos el script, obtenemos en el directorio <b>outputs/positioning_partitions/plots</b> las siguientes gráficas que definen el error obtenido en la estimación de la posición:
+
+<img src="outputs/positioning_partitions/plots/errorbar metrics.png" alt="Errorbar de las métricas de error de posicionamiento"></img>
+<img src="outputs/positioning_partitions/plots/barplot metrics.png" alt="Barplot de las métricas de error de posicionamiento"></img>
+
+
+La primera gráfica nos muestra el error de posicionamiento para cada modelo en cada coordenada, ordenado de menor a mayor según el error. Para ello, se ha empleado en este caso los modelos kNN(K=1), KNN(K=5) y RF(n_estimators=500), representados con los colores naranja, verde y morado respectivamente. Realizamos esta gráfica para mostrar el error de posicionamiento en cada partición del estudio, y así poder comparar los resultados obtenidos en cada una de ellas. Para cada punto, tenemos representado la media (punto con color) y la desviación típica (barra vertical) del error de posicionamiento en cada partición.
+
+Por otro lado, la segunda gráfica nos muestra el error en una gráfica de barras para cada modelo y partición. En este caso, se ha representado el error medio de posicionamiento para cada modelo en cada partición, y se ha representado la desviación típica del error de posicionamiento en cada partición. De este modo, podemos comparar el error de posicionamiento medio de cada modelo de cada partición.

@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="README.md tabla puntos particiones">
+    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="README.md constants partitions explained">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -152,7 +152,7 @@
       <workItem from="1702544816915" duration="14400000" />
       <workItem from="1702580735683" duration="3282000" />
       <workItem from="1702630335998" duration="1542000" />
-      <workItem from="1702631900803" duration="11379000" />
+      <workItem from="1702631900803" duration="12377000" />
     </task>
     <task id="LOCAL-00001" summary="initial push">
       <option name="closed" value="true" />
@@ -274,7 +274,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702646354961</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="README.md constants partitions explained">
+      <option name="closed" value="true" />
+      <created>1702646546296</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1702646546297</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -315,7 +323,8 @@
     <MESSAGE value="README.md fixed explanation constants vs 1" />
     <MESSAGE value="README.md fixed explanation constants vs 2" />
     <MESSAGE value="README.md tabla puntos particiones" />
-    <option name="LAST_COMMIT_MESSAGE" value="README.md tabla puntos particiones" />
+    <MESSAGE value="README.md constants partitions explained" />
+    <option name="LAST_COMMIT_MESSAGE" value="README.md constants partitions explained" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$obtainDataINITandPositioning__1_.coverage" NAME="obtainDataINITandPositioning (1) Coverage Results" MODIFIED="1702634443256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
