@@ -257,7 +257,102 @@ Dentro de las constantes, en el script constants.py, es importante definir las s
 <b>constants.T_MAX_SAMPLING_TEST:</b> tiempo máximo (en segundos) de muestreo en cada label de test.
 
 
-Por último, haciendo uso de los métodos descritos en preprocess.py, al ejecutar los scripts process_train.py y process_test.py. El flujo de ejecución será el siguiente:
+Por último, haciendo uso de los métodos descritos en <b>preprocess.py</b>, al ejecutar los scripts <b>process_train.py</b> y <b>process_test.py</b>. El flujo de ejecución será el siguiente:
 
 <img src="info/flujo_preprocesado.png" alt="Flujo de ejecución del preprocesado de los datos"></img>
 
+El proceso se resume en lo siguiente:
+Se procesan los ficheros log de <b>get_sensordata</b>, para transformarlos a un formato en el que cada fila representa el fingerprint de un segundo, como la media de todas las observaciones en ese periodo de RSS para cada AP.
+Posteriormente, se cambian los NAs resultantes por el valor mínimo global – 1, esto se hace para que posteriormente, con el escalado, el 0 represente ausencia de RSS.
+También se aplica un promediado móvil en ventanas de 30 segundos con un overlapping de 5 segundos, de este modo, suavizamos los valores obtenidos en el RSS. 
+Finalmente, se obtiene el fichero de <b>raw_radiomap.csv</b> (sin escalado), y <b>processed_radiomap.csv</b> (con escalado)
+
+
+## Datos de particiones en Train 
+
+También se ha planteado en el proyecto, para probar otras alternativas, ha realizar varias particiones de train y de test con los mismos datos recogidos en train, para poder estudiar los efectos en recogidas de datos de tiempos similares.
+Para ello, se ha implementado el script process_partitions.py. El objetivo de este script será obtener el siguiente directorio de salida aplicando los mismos pasos de preprocesado que en el caso de train, pero con puntos de referencia distintos.
+El script devuelve el siguiente directorio:
+
+```python
+data
+|----train
+|---- test
+|---- partitions **
+|	      |---- partition_5vs18
+|	      |		   |---- train
+|	      |		   |       |---- raw
+|	      |		   |       |	  |---- raw_radiomap.csv
+|	      |		   |       |---- processed
+|	      |		   |       |	  |---- processed_radiomap.csv
+|	      |		   |       |	  |
+|	      |	   	   |---- test
+|	      |		   |       |---- raw
+|	      |	   	   |       |	  |---- raw_radiomap.csv
+|	      |	   	   |       |---- processed
+|	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |---- partition_10vs13
+|	      |	   	   |---- train
+|	      |	   	   |       |---- raw
+|	      |	   	   |       |      |---- raw_radiomap.csv
+|	      |	   	   |       |---- processed
+|	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |	   	   |       |	  |
+|	      |	   	   |---- test
+|	      |	   	   |       |---- raw
+|	      |	   	   |       |	  |---- raw_radiomap.csv
+|	      |	   	   |       |---- processed
+|	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |---- partition_15vs8
+|	      |	   	   |---- train
+|	      |	   	   |       |---- raw
+|	      |	   	   |       |	  |---- raw_radiomap.csv
+|	      |	   	   |       |---- processed
+|	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |	   	   |       |	  |
+|	      |	   	   |---- test
+|	      |	   	   |       |---- raw
+|	      |	   	   |       |	  |---- raw_radiomap.csv
+|	      |	   	   |       |---- processed
+|	      |	   	   |       |	  |---- processed_radiomap.csv
+```
+
+En este paso se han planteado 3 alternativas con los datos de train, representadas en la siguiente tabla:
+
+<table class="default">
+  <colgroup>
+  <colgroup>
+  <colgroup>
+  <tr>
+    <th>Partición</th>
+    <th>Conjunto</th>
+    <th>Puntos de referencia asociados</th>
+  </tr>
+  <tr>
+    <th rowspan="2">Partición 5 Train frente 18 Test</th>
+    <td>Train</td>
+    <td>0, 2, 11, 14, 21</td>
+  </tr>
+  <tr>
+    <td>Test</td>
+    <td>1, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 15, 16, 17, 18, 19, 20, 22</td>
+  </tr>
+    <tr>
+        <th rowspan="2">Partición 10 Train frente 13 Test</th>
+        <td>Train</td>
+        <td>0, 2, 3, 5, 9, 13, 19, 22</td>
+    </tr>
+    <tr>
+        <td>Test</td>
+        <td>1, 4, 6, 7, 8, 10, 11, 12, 14, 15, 16, 17, 18, 20, 21</td>
+    </tr>
+    <tr>
+        <th rowspan="2">Partición 15 Train frente 8 Test</th>
+        <td>Train</td>
+        <td> 0, 2, 4, 5, 7, 9, 10, 11, 14, 15, 17, 18, 20, 21, 22 </td>
+    </tr>
+    <tr>
+        <td>Test</td>
+        <td>1, 3, 6, 8, 12, 13, 16, 19</td>
+    </tr>
+</table>
