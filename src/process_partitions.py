@@ -24,10 +24,11 @@ labels_test_10vs13 = [x for x in range(23) if x not in constants.labels_partitio
 labels_test_15vs8 = [x for x in range(23) if x not in constants.labels_partition_15vs8]
 
 warnings.filterwarnings("ignore")
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 def main():
-    os.makedirs("partitions", exist_ok=True)
+    os.makedirs("data/partitions", exist_ok=True)
     os.makedirs(part_5vs18, exist_ok=True)
     os.makedirs(f"{part_5vs18}/train", exist_ok=True)
     os.makedirs(f"{part_5vs18}/train/raw", exist_ok=True)

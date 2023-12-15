@@ -21,8 +21,3 @@ if __name__ == "__main__":
     execute_process_script(SCRIPT_TEST)
     execute_process_script(SCRIPT_PARTITIONS)
     execute_process_script(SCRIPT_POSITIONING)
-
-    # subprocess.run(["python", "process_train.py"], check=True)
-    # subprocess.run(["python", "process_test.py"], check=True)
-    # subprocess.run(["python", "process_partitions.py"], check=True)
-    # subprocess.run(["python", "positioning_partitions.py"], check=True)

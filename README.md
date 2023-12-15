@@ -1,4 +1,4 @@
-# cGAN data augmentation for indoor positioning
+# IA Generativa Aplicada A La Mejora De La Estimación De Posición
 
 En la era actual de la conectividad inalámbrica, el uso de tecnologías basadas en WiFi se ha convertido en un componente esencial de nuestras vidas cotidianas. La ubicación y la geolocalización son factores críticos para una amplia gama de aplicaciones, desde la navegación en interiores hasta la optimización de la logística en almacenes inteligentes. Una de las técnicas más comunes para estimar la posición en entornos interiores se basa en el uso del "Fingerprinting" del WiFi, que implica la creación de una base de datos de señales RSSI (Received Signal Strength Indicator) en puntos de referencia conocidos. Sin embargo, la creación y el mantenimiento de estas bases de datos puede ser un proceso costoso y laborioso.
 
@@ -12,17 +12,47 @@ Con el crecimiento continuo de la Internet de las cosas (IoT) y la necesidad de 
 
 A lo largo de las próximas secciones, se detallarán los aspectos metodológicos, los resultados obtenidos y las conclusiones derivadas de esta investigación.
 
-## Preprocesamiento de los datos
+## Estructura del proyecto
 
-Los datos obtenidos con la aplicación de **get_sensordata** se encuentran en el directorio *data/raw_groundtruth*.
+La estructura entera del proyecto se basa en 4 directorios principales:
 
-El script **process_groundTruth.py** se encarga de procesar los datos en bruto, limpiarlos y exportalos en la ruta *data/final_groundtruth*
+<ul>
+    <li><b>data:</b> Directorio en la que se encuentran tanto los datos obtenidos usando la aplicación <b>get_sensordata</b>, como los datos preprocesados</li>
+    <li><b>info:</b> Directorio en el que se encuentran los ficheros de información del proyecto:</li>
+    <ul>
+        <li><b>coordenadas_train.csv:</b> Fichero con las coordenadas usadas en cada punto de referencia de Train</li>
+        <li><b>coordenadas_test.csv:</b> Fichero con las coordenadas usadas en cada punto de referencia de Test</li>
+        <li><b>mapa_plano.png:</b> Mapa del plano en la recogida de datos, indicando la posición de cada punto de referencia, tanto en entrenamiento como en test</li>
+        <li><b>Documentación del proyecto.docx:</b> Word con documentación adicional del proyecto</li>
+    </ul>
+    <li><b>outputs:</b> Directorio en el que se encuentran todas las salidas del proyecto:</li>
+    <ul>
+        <li>Imágenes</li>
+        <li>Gifs</li>
+        <li>Checkpoints de modelos</li>
+        <li>Tablas con métricas</li>
+        <li>...</li>
+    </ul>
+    <li><b>src: </b> Directorio con el código fuente de todo el proyecto, hecho para realizar las ejecuciones necesarias de forma modular. Dentro de este directorio se encuentran todos los <b>scripts.py</b> que ejecutan alguna acción determinada en un proceso: <b>process_train.py</b>, <b>process_test.py</b>  <b>process_partitions.py</b> y <b>positioning_partitions.py</b>.
+        Además, en el módulo <b>utils</b> se encuentran definidos las constantes, los métodos y las clases fundamentales para el desarrollo de todo el proyecto.</li>
+</ul>
 
-## Carga de los datos
+Los principales scripts implementados para la ejecución del proyecto son:
+<li><b>obtainDataINITandPositioning.py: </b> Está diseñado para ejecutarse del siguiente modo en la terminal:</li>
 
-Para cargar los datos, se ha definido una clase **DataLoader** dentro del directorio **src**. Esta clase se encarga de cargar los datos, procesarlos y devolverlos en formato *numpy array*.
+```python
+python obtainDataINITandPositioning.py 
+```
 
-Una de las operaciones realizadas en los datos como preprocesamiento consiste en generar los mapas de reference points continuos desde los mapas discretos. Para ello:
+Este script se encargará de procesar los datos de entrenamiento, de test, crear las particiones de datos de entrenamiento y test utilizando los datos de entrenamiento, y de aplicar la estimación de la posición con las particiones. Devolviendo así la tabla de métricas, la tabla de métricas para cada coordenada y gráficas de error de posicionamiento
+
+
+## Datos del proyecto, preprocesado y estructuración
+
+<img src="info/mapa_datos.png" alt="Mapa del plano del edificio INIT, usado en la recogida de datos, indicando la posición de cada punto de referencia de entrenamiento (color azul) y los puntos de referencia de test (color rojo)"></img>
+
+Los datos se han recogido manualmente utilizando la aplicación <b>get_sensordata</b> en el edificio del INIT.
+La imagen de arriba
 
 1) Se leen el fichero de datos **groundtruth.csv**
 2) Para cada AP se genera un mapa de puntos de referencia continuos de la siguiente forma:
