@@ -52,144 +52,212 @@ Este script se encargará de procesar los datos de entrenamiento, de test, crear
 <img src="info/mapa_datos.png" alt="Mapa del plano del edificio INIT, usado en la recogida de datos, indicando la posición de cada punto de referencia de entrenamiento (color azul) y los puntos de referencia de test (color rojo)"></img>
 
 Los datos se han recogido manualmente utilizando la aplicación <b>get_sensordata</b> en el edificio del INIT.
-La imagen de arriba
+La imagen de arriba muestra un mapa de la planta y de la localización de los distintos puntos de referencia de datos. El color azul representa los puntos de Train, mientras que el color rojo representa los puntos de Test.
 
-1) Se leen el fichero de datos **groundtruth.csv**
-2) Para cada AP se genera un mapa de puntos de referencia continuos de la siguiente forma:
-   1) Para cada batch temporal de datos, se calcula la media de las señales RSSI del AP en cada Reference Point
-   2) Se interpola la señal RSSI en cada Reference Point para obtener un mapa continuo, con RSS para todo punto (latitud, longitud) del mapa
-   3) Se interpolan datos ausentes resultado de la interpolación anterior
-
-![Imagen izquierda: Media RSS de una AP en todo un intervalo temporal para cada punto discreto anotado (Latitud, Longitud). Imagen central: Interpolación valores RSS para todo punto (latitud, longitud). Imagen derecha: Interpolación valores ausentes de la interpolación anterior](figs/rpmap_disc_cont_inter.png)
-
-Imagen izquierda: Media RSS de una AP en todo un intervalo temporal para cada punto discreto anotado (Latitud, Longitud). Imagen central: Interpolación valores RSS para todo punto (latitud, longitud). Imagen derecha: Interpolación valores ausentes de la interpolación anterior
-
-Todas estas operaciones las ejecuta el **DataLoader** utilizando la función **referencePointMap**
+Se genera un fichero por cada punto de referencia y, una vez recogidos los datos con algún dispositivo Android (móvil, Tablet, ...), <u> se traspasan manualmente</u> al siguiente directorio (en train y en test):
 
 ```python
-
-from src.utils import constants, dataloader
-
-X, y = dataloader.DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
-                             aps_list=constants.aps, batch_size=30, step_size=5,
-                             size_reference_point_map=300,
-                             return_axis_coords=False)()
+data
+├── train
+│   ├── initial_rp_data (TRAIN DATA)
+│
+├── test
+│   ├── initial_rp_data (TEST DATA)
 ```
 
+Si consideramos que cada baldosa, representada en las rejillas grises de la imagen, mide 60 centímetros, entonces realizamos una transformación de coordenadas ficticias (baldosas) a coordenadas longitud, latitd (metros). La tabla de coordenadas la podemos visualizar en las siguientes tablas:
 
+<table>
+    <caption>Tabla de puntos de referencia de TRAIN</caption>
+    <tr>
+        <th>Label</th>
+        <th>Longitud</th>
+        <th>Latitud</th>
+    </tr>
+    <tr>
+        <td>0</td>
+        <td>0.6</td>
+        <td>0</td> 
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>5.4</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>9</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>9</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>6</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>3</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>0.6</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>0.6</td>
+        <td>4.8</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>3.6</td>
+        <td>4.8</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>6</td>
+        <td>4.8</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>9</td>
+        <td>4.8</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>9</td>
+        <td>7.8</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>0.6</td>
+        <td>7.8</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>3</td>
+        <td>7.8</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>0.6</td>
+        <td>7.8</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>0.6</td>
+        <td>9.6</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>3</td>
+        <td>9.6</td>
+    </tr>
+    <tr>
+        <td>17</td>
+        <td>4.8</td>
+        <td>9.6</td>
+    </tr>
+    <tr>
+        <td>18</td>
+        <td>8.4</td>
+        <td>9.6</td>
+    </tr>
+    <tr>
+        <td>19</td>
+        <td>8.4</td>
+        <td>12</td>
+    </tr>
+    <tr>
+        <td>20</td>
+        <td>8.4</td>
+        <td>14.4</td>
+    </tr>
+    <tr>
+        <td>21</td>
+        <td>3</td>
+        <td>14.4</td>
+    </tr>
+    <tr>
+        <td>22</td>
+        <td>0</td>
+        <td>14.4</td>
+</table>
 
+Dentro del directorio <b>src</b>, tenemos dos scripts de Python: process_train.py y process_test.py. La ejecución de cada uno de estos scripts (desde el script del directorio principal: <b>obtainDataINITandPositioning.py</b>) nos va a realizar todo el preprocesado necesario para obtener el radiomap preparado para el entrenamiento de los modelos de posicionamiento.
 
-## Herramientas de visualización
-
-Para visualizar los datos, se han implementado una serie de funciones en el script **src/imutils.py**:
-<ul>
-    <li><b>plotAllAP</b> Muestra y guarda la imagen del mapa continuo de RP para cada instante temporal</li>
-    <li><b>save_ap_gif</b> Guarda un gif con la evolución temporal del mapa continuo de RP</li>
-    <li><b>displayGif</b> Muestra en el notebook el gif</li>
-</ul>
+La ejecución de estos scripts nos proporcionará el siguiente directorio de salida:
+(nuevos ficheros y directorios marcados con dos asteriscos)
 
 ```python
-
-from src.utils import dataloader, imutils
-from src import constants
-
-X, y, _ = dataloader.DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
-                                aps_list=constants.aps, batch_size=30, step_size=5,
-                                size_reference_point_map=300,
-                                return_axis_coords=False)()
-RPMap, APLabel = X[:, :, :, 0], y[:, 0]
-
-# Si queremos solamente mostrar el mapa de un AP sin guardar la imagen
-imutils.plotAllAp(reference_point_map=RPMap, labels=APLabel, aps_list=constants.aps,
-                  save_ok=False, plot_ok=True)
+data
+|----train
+|	|---- initial_rp_data
+|	|---- checkpoint_groundtruth **
+|	|---- raw_radiomap **
+|	|	|---- raw_radiomap.csv **
+|	|---- processed_radiomap **
+|	|	|----- processed_radiomap.csv **
+|	
+|---- test
+|	|---- initial_rp_data
+|	|---- checkpoint_groundtruth **
+|	|---- raw_radiomap **
+|	|	|---- raw_radiomap.csv **
+|	|---- processed_radiomap **
+|	|	|----- processed_radiomap.csv **
 ```
 
-Se visualizaría la siguiente imagen:
+Donde <b>raw_radiomap.csv</b> corresponde con el radiomap sin escalado de los datos, por lo que se presenta en unidades (decibelios), mientras que <b>processed_radiomap.csv</b> presenta los niveles de RSS escalados entre 0 y 1.
 
-![Imagen AP](outputs/RPMap/rpmap_300_overlapping/imagenes/GEOTECWIFI03.png)
-
-
-Si queremos guardar el gif con la evolución temporal del mapa de un AP:
-
+Los scripts de preprocesado, dependen directamente de los métodos implementados en los scripts <b>preprocess.py</b> y <b>constants.py</b> que se encuentran en el directorio <b>src/utils</b>
 
 ```python
-X, y, [x_coords, y_coords] = dataloader.DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
-                                                   aps_list=constants.aps, batch_size=30, step_size=5,
-                                                   size_reference_point_map=300,
-                                                   return_axis_coords=False)()
-RPMap, APLabel = X[:,:,:,0], y[:,0]
-imutils.save_ap_gif(reference_point_map = RPMap, x_g = x_coords, y_g = y_coords, aps_list = constants.aps,
-                    reduced = False, path="gifs")
+root
+|
+|----data
+|
+|---- src
+|      |---- models
+|      |---- positioning
+|      |---- utils
+|      |       |---- preprocess.py
+|      |       |---- constants.py
+|      |
+|      |---- process_train.py
+|      |---- process_test.py
+|      |---- process_partitions.py
+|      |---- positioning_partitions.py
+|
+|---- obtainDataINITandPositioning.py
 
-imutils.displayGif("gifs/GEOTECWIFI03.gif")
 ```
+Dentro de las constantes, en el script constants.py, es importante definir las siguientes de manera correcta, y adecuado para el sistema de directorios en el trabajo, para que el preprocesado se realice de manera correcta:
 
-Se visualizaría el siguiente gif:
-
-![Gif AP](outputs/RPMap/rpmap_300_overlapping/gifs/GEOTECWIFI03.gif)
-
-
-
-
-## Entrenamiento de cGAN para aumento de datos
-
-Para entrenar el modelo, ya se encuentra definido el tipo de modelo cGAN a utilizar dentro de **models**. Además, se encuentran definidos una serie de **callbacks**
- customizados para utilizar en el proceso de entrenamiento de la cGAN dentro del mismo directorio. Entre ellos tenemos definido:
-
-<ul>
-    <li><b>SaveImageTraining:</b> Guarda la imagen real, la imagen generada y el histograma de la imagen generada tras cada época </li>
-    <li><b>LoggingCheckpointTraining:</b> Guarda el modelo en formato .h5 cada 10 épocas</li>
-</ul>
-
-```python
-import tf
-
-# Importación del modelo cGAN
-from models.cGAN_300_300 import cGAN
-# uso de callbacks definidas para la cGAN
-from src.models.callbacks import SaveImageTraining, LoggingCheckpointTraining
+<b>constants.data.train.INITIAL_DATA:</b> dirección de los datos iniciales de entrenamiento
+<b>constants.data.train.CHECKPOINT_DATA_PATH:</b> dirección de los checkpoints de los datos de entrenamiento
+<b>constants.data.train.RAW_OUT_PATH:</b> dirección del radiomap en bruto de entrenamiento
+<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de entrenamiento
+<b>constants.data.train.INITIAL_DATA:</b> dirección de los datos iniciales de test
+<b>constants.data.train.CHECKPOINT_DATA_PATH:</b> dirección de los checkpoints de los datos de test
+<b>constants.data.train.RAW_OUT_PATH:</b> dirección del radiomap en bruto de test
+<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de test
+<b>constants.aps:</b> lista con los puntos de acceso WiFi a considerar para la obtención del fingerprint
+<b>constants.labels_dictionary_meters:</b> diccionario que transforma de label a coordenadas en entrenamiento
+<b>constants.labels_dictionary_meters_test:</b> diccionario que transforma de label a coordenadas en test
+<b>constants.labels_train:</b> lista con las labels (puntos de acceso) a considerar en entrenamiento
+<b>constants.labels_test:</b> lista con las labels (puntos de acceso) a considerar en test
+<b>constants.T_MAX_SAMPLING:</b> tiempo máximo (en segundos) de muestreo en cada label de entrenamiento
+<b>constants.T_MAX_SAMPLING_TEST:</b> tiempo máximo (en segundos) de muestreo en cada label de test
 
 
-# Definición del discriminador y el generador
-def define_discriminator():
-    ....
+Por último, haciendo uso de los métodos descritos en preprocess.py, al ejecutar los scripts process_train.py y process_test.py. El flujo de ejecución será el siguiente:
 
-
-def define_generator(latent_dim):
-    ....
-
-
-discriminator = define_discriminator()
-generator = define_generator(latent_dim=100)
-
-# definición del dataset
-dataset = tf.data.Dataset.from_tensor_slices((X, y)).shuffle(1000).batch(8)
-
-# definición de callbacks
-path_images_training = f"{constants.outputs.models.cgan_300}/training_images"
-path_checkpoints = f"{constants.outputs.models.cgan_300}/checkpoints"
-save_image = SaveImageTraining(X, y, save_dir=path_images_training)
-save_model = LoggingCheckpointTraining(save_dir=path_checkpoints)
-
-# Entrenamiento del modelo
-cgan = cGAN(generator=generator, discriminator=discriminator)
-cgan.fit(dataset, epochs=50, callbacks=[save_image, save_model])
-```
-
-El proceso de entrenamiento lo podemos representar en un gif animado como sigue:
-
-![Gif AP](outputs/process_training/cGAN_28_28/gif/training_process.gif)
-
-
-
-## Datos
-
-Se realizó una recogida de datos en el edificio de espaitec en el Instituto de las Nuevas Tecnologías de la Imagen (INIT), en la Universitat de Jaume I. Se recogieron datos utilizando 7 APs en 23 puntos de referencia de la misma sala para el conjunto de entrenamiento. Los datos se recogieron y 17 puntos de referencia para el conjunto de test.
-
-Para el conjunto de entrenamiento, en cada uno de los 23 Reference Points, se recogieron 1140 segundos de datos, mientras que con el conjunto de test se recogieron 60 segundos de datos en los 17 reference points, cada uno con unas coordenadas (longitud, latitud) distintas que en el conjunto de entrenamiento.
-
-Podemos ver la representación de los puntos de referencia de entrenamiento y los puntos de referencia de test en la siguiente imagen:
-
-![Imagen AP](figs/coords_train_test.png)
-
+<img src="info/flujo_preprocesado.png" alt="Flujo de ejecución del preprocesado de los datos"></img>
 
