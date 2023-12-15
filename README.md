@@ -356,3 +356,13 @@ En este paso se han planteado 3 alternativas con los datos de train, representad
         <td>1, 3, 6, 8, 12, 13, 16, 19</td>
     </tr>
 </table>
+
+Para el correcto funcionamiento del script process_partitions.py. Hay que asegurarse que las siguientes constantes en <b>src/utils/constants.py</b> estén correctamente definidas:
+
+<b>constants.labels_partition_5vs18:</b> lista con puntos de referencia de train a usar en la partición 5 vs 18 <br>
+<b>constants.labels_partition_10vs13:</b> lista con puntos de referencia de train a usar en la partición 10 vs 13 <br>
+<b>constants.labels_partition_15vs8:</b> lista con puntos de referencia de train a usar en la partición 15 vs 8 <br>
+<b>constants.data.partitions.PARTITION_5VS18:</b> directorio de salida de la partición 5 vs 18 <br>
+<b>constants.data.partitions.PARTITION_10VS13:</b> directorio de salida de la partición 10 vs 13 <br>
+<b>constants.data.partitions.PARTITION_15VS8:</b> directorio de salida de la partición 15 vs 8 <br>
+
