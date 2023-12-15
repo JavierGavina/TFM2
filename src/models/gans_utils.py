@@ -1,8 +1,8 @@
 import sys
 import tensorflow as tf
 
-sys.path.append("../")
-from src.constants import constants
+sys.path.append("../../")
+from src.utils.constants import constants
 import numpy as np
 
 

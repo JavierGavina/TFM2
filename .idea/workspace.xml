@@ -4,14 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="barplot error each partition-model">
+    <list default="true" id="073568eb-5f03-4c33-bc9e-327945bd8a81" name="Changes" comment="scaled ylim on errorbar metrics plot">
+      <change afterPath="$PROJECT_DIR$/obtainDataINITandPositioning.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/cGAN_28_28.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/cGAN_28_28.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/CVAE.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/CVAE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/cGAN_28_28.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/cGAN_28_28.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/callbacks.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/callbacks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/gans_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/gans_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/generative_metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/generative_metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/wassersteinCGAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/wassersteinCGAN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/wasserstein_CGAN_GP.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/wasserstein_CGAN_GP.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/plots/barplot metrics.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/plots/barplot metrics.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/plots/errorbar metrics.png" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/plots/errorbar metrics.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" beforeDir="false" afterPath="$PROJECT_DIR$/outputs/positioning_partitions/tablas/tabla_metricas_per_coord.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/positioning/positioning_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_partitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positioning/positioning_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/positioning_partitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positioning/positioning_per_coord.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_per_coord.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positioning/positioning_process.py" beforeDir="false" afterPath="$PROJECT_DIR$/positioning/positioning_process.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/positioning/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/positioning/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_partitions.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_partitions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/process_train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/constants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dataloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/dataloader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/imutils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/imutils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/preprocess.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +80,59 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\src\models" />
+      <recent name="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\src\positioning" />
+      <recent name="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\src\utils" />
+      <recent name="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.obtainDataINITandPositioning (1)">
+    <configuration name="obtainDataINITandPositioning (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="cGAN_DataAumentation_OTRO_ENFOQUE" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/obtainDataINITandPositioning.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="obtainDataINITandPositioning" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="cGAN_DataAumentation_OTRO_ENFOQUE" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\obtainDataINITandPositioning.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="positioning_partitions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cGAN_DataAumentation_OTRO_ENFOQUE" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -76,7 +146,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/positioning/positioning_partitions.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\javie\Desktop\SISTEMAS INTELIGENTES\cGAN_DataAumentation_OTRO_ENFOQUE\src\positioning_partitions.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -87,6 +157,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.obtainDataINITandPositioning (1)" />
+        <item itemvalue="Python.obtainDataINITandPositioning" />
         <item itemvalue="Python.positioning_partitions" />
       </list>
     </recent_temporary>
@@ -101,7 +173,9 @@
       <updated>1702476831210</updated>
       <workItem from="1702476832374" duration="808000" />
       <workItem from="1702544816915" duration="14400000" />
-      <workItem from="1702580735683" duration="2608000" />
+      <workItem from="1702580735683" duration="3282000" />
+      <workItem from="1702630335998" duration="1542000" />
+      <workItem from="1702631900803" duration="2920000" />
     </task>
     <task id="LOCAL-00001" summary="initial push">
       <option name="closed" value="true" />
@@ -151,7 +225,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702561339767</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="scaled ylim on errorbar metrics plot">
+      <option name="closed" value="true" />
+      <created>1702586940636</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1702586940636</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,9 +266,12 @@
     <MESSAGE value="initial push" />
     <MESSAGE value="metrics with partitions and line error bar plot" />
     <MESSAGE value="barplot error each partition-model" />
-    <option name="LAST_COMMIT_MESSAGE" value="barplot error each partition-model" />
+    <MESSAGE value="scaled ylim on errorbar metrics plot" />
+    <option name="LAST_COMMIT_MESSAGE" value="scaled ylim on errorbar metrics plot" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$positioning_partitions.coverage" NAME="positioning_partitions Coverage Results" MODIFIED="1702581445882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/positioning" />
+    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$obtainDataINITandPositioning__1_.coverage" NAME="obtainDataINITandPositioning (1) Coverage Results" MODIFIED="1702634443256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$main.coverage" NAME="main Coverage Results" MODIFIED="1702632867422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/cGAN_DataAumentation_OTRO_ENFOQUE$positioning_partitions.coverage" NAME="positioning_partitions Coverage Results" MODIFIED="1702630972662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/positioning" />
   </component>
 </project>

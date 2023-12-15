@@ -1,9 +1,10 @@
-import os, tqdm
+import os
 
-import pandas as pd
-from src.constants import constants
-from src.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
-from src.preprocess import fix_na_wifi, rolling_mean, scale_wifi
+import warnings
+
+from utils.constants import constants
+from utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
+from utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi
 
 # Cogemos los ssids que han aparecido en más de una recogida de datos
 lista_ssid_candidatos = constants.aps
@@ -21,6 +22,8 @@ part_15vs8 = constants.data.partitions.PARTITION_15VS8
 labels_test_5vs18 = [x for x in range(23) if x not in constants.labels_partition_5vs18]
 labels_test_10vs13 = [x for x in range(23) if x not in constants.labels_partition_10vs13]
 labels_test_15vs8 = [x for x in range(23) if x not in constants.labels_partition_15vs8]
+
+warnings.filterwarnings("ignore")
 
 
 def main():

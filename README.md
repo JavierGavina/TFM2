@@ -37,8 +37,8 @@ Imagen izquierda: Media RSS de una AP en todo un intervalo temporal para cada pu
 Todas estas operaciones las ejecuta el **DataLoader** utilizando la función **referencePointMap**
 
 ```python
-from src import dataloader
-from src import constants
+
+from src.utils import constants, dataloader
 
 X, y = dataloader.DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
                              aps_list=constants.aps, batch_size=30, step_size=5,
@@ -58,21 +58,20 @@ Para visualizar los datos, se han implementado una serie de funciones en el scri
     <li><b>displayGif</b> Muestra en el notebook el gif</li>
 </ul>
 
-
 ```python
-from src import dataloader
+
+from src.utils import dataloader, imutils
 from src import constants
-from src import imutils
 
 X, y, _ = dataloader.DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
-                                                   aps_list=constants.aps, batch_size=30, step_size=5,
-                                                   size_reference_point_map=300,
-                                                   return_axis_coords=False)()
-RPMap, APLabel = X[:,:,:,0], y[:,0]
+                                aps_list=constants.aps, batch_size=30, step_size=5,
+                                size_reference_point_map=300,
+                                return_axis_coords=False)()
+RPMap, APLabel = X[:, :, :, 0], y[:, 0]
 
 # Si queremos solamente mostrar el mapa de un AP sin guardar la imagen
-imutils.plotAllAp(reference_point_map = RPMap, labels = APLabel, aps_list = constants.aps,
-                  save_ok = False, plot_ok = True)
+imutils.plotAllAp(reference_point_map=RPMap, labels=APLabel, aps_list=constants.aps,
+                  save_ok=False, plot_ok=True)
 ```
 
 Se visualizaría la siguiente imagen:
@@ -118,14 +117,17 @@ import tf
 # Importación del modelo cGAN
 from models.cGAN_300_300 import cGAN
 # uso de callbacks definidas para la cGAN
-from models.callbacks import SaveImageTraining, LoggingCheckpointTraining
+from src.models.callbacks import SaveImageTraining, LoggingCheckpointTraining
+
 
 # Definición del discriminador y el generador
 def define_discriminator():
     ....
 
+
 def define_generator(latent_dim):
     ....
+
 
 discriminator = define_discriminator()
 generator = define_generator(latent_dim=100)
@@ -141,7 +143,7 @@ save_model = LoggingCheckpointTraining(save_dir=path_checkpoints)
 
 # Entrenamiento del modelo
 cgan = cGAN(generator=generator, discriminator=discriminator)
-cgan.fit(dataset, epochs=50, callbacks = [save_image, save_model])
+cgan.fit(dataset, epochs=50, callbacks=[save_image, save_model])
 ```
 
 El proceso de entrenamiento lo podemos representar en un gif animado como sigue:

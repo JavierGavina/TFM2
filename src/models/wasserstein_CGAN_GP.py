@@ -1,23 +1,22 @@
 import tensorflow as tf
 import numpy as np
 import os
-import math
 import matplotlib.pyplot as plt
 import itertools
 
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, Conv2DTranspose, Reshape, BatchNormalization, LeakyReLU, \
-    Dropout, Input, Concatenate, Embedding, ReLU
-from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, Conv2DTranspose, Reshape, LeakyReLU, \
+    Input, Concatenate, Embedding, ReLU
+from tensorflow.keras.models import Model
 
 from PIL import Image
 
 import sys
 
-sys.path.append("..")
+sys.path.append("../..")
 
-from src.dataloader import DataLoader, labelEncoding, labelDecoding
+from src.utils.dataloader import DataLoader, labelEncoding
 from src.constants import constants
-from models.callbacks import SaveImageTraining, LoggingCheckpointTraining
+from src.models.callbacks import SaveImageTraining, LoggingCheckpointTraining
 
 
 # Generador usa ReLu y no LeakyReLu
@@ -76,26 +75,42 @@ def build_critic(input_shape=(28, 28, 1), n_classes=7):
     return model
 
 
-class wCGAN(Model):
+class wCGAN_GP(Model):
     def __init__(self, generator: tf.keras.models.Model, critic: tf.keras.models.Model,
-                 clip_value: float = None, n_critic: int = 1, *args, **kwargs):
+                 n_critic: int = 1, gradient_penalty_weight: float = 10.0, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.generator = generator
         self.critic = critic
-        self.clip_value = clip_value
         self.n_critic = n_critic
+        self.gradient_penalty_weight = gradient_penalty_weight
         self.opt_g = None
         self.opt_c = None
-
-        if clip_value is None:
-            self.clip_value = math.Inf
 
     def compile(self, opt_g, opt_c, *args, **kwargs):
         super().compile(*args, **kwargs)
 
         self.opt_g = opt_g
         self.opt_c = opt_c
+
+    def gradient_penalty(self, x, x_gen, input_labels):
+        batch_size = tf.shape(x)[0]
+        epsilon = tf.random.uniform((batch_size, 1, 1, 1), 0, 1)
+
+        # Cast x and x_gen to float32
+        x = tf.cast(x, tf.float32)
+        x_gen = tf.cast(x_gen, tf.float32)
+
+        x_hat = epsilon * x + (1 - epsilon) * x_gen
+
+        with tf.GradientTape() as t:
+            t.watch(x_hat)
+            d_hat = self.critic([x_hat, input_labels], training=False)
+
+        gradients = t.gradient(d_hat, x_hat)
+        ddx = tf.sqrt(tf.reduce_sum(gradients ** 2, axis=[1, 2]))
+        d_regularizer = tf.reduce_mean((ddx - 1.0) ** 2)
+        return d_regularizer
 
     @tf.function
     def train_step(self, batch):
@@ -115,16 +130,24 @@ class wCGAN(Model):
                 # Pass the real and fake images to the discriminator model
                 yhat_real = self.critic([images_real, labels], training=True)
                 yhat_fake = self.critic([images_generated, labels], training=True)
+                yhat_realfake = tf.concat([yhat_real, yhat_fake], axis=0)
+
+                # Create labels for real and fakes images
+                y_realfake = tf.concat([tf.zeros_like(yhat_real), tf.ones_like(yhat_fake)], axis=0)
 
                 # Add some noise to the TRUE outputs (crucial step)
-                # noise_real = 0.15 * tf.random.uniform(tf.shape(yhat_real))
-                # noise_fake = -0.15 * tf.random.uniform(tf.shape(yhat_fake))
+                noise_real = 0.15 * tf.random.uniform(tf.shape(yhat_real))
+                noise_fake = -0.15 * tf.random.uniform(tf.shape(yhat_fake))
+                y_realfake += tf.concat([noise_real, noise_fake], axis=0)
 
-                # Calculate loss
-                total_loss_c = tf.reduce_mean(yhat_fake) - tf.reduce_mean(yhat_real)
+                # gradient penalty
+                d_regularizer = self.gradient_penalty(images_real, images_generated, labels)
 
-                for layer in self.critic.trainable_variables:
-                    layer.assign(tf.clip_by_value(layer, -self.clip_value, self.clip_value))
+                ### loss with GP
+                total_loss_c = (
+                        tf.reduce_mean(yhat_fake) - tf.reduce_mean(
+                    yhat_real) + d_regularizer * self.gradient_penalty_weight
+                )
 
             # Apply backpropagation
             cgrad = c_tape.gradient(total_loss_c, self.critic.trainable_variables)
@@ -150,8 +173,7 @@ class wCGAN(Model):
 
 
 if __name__ == "__main__":
-    model_architecture = "../outputs/model_architecture/wasserstein_cgan_28x28"
-    path_wcgan = f"../{constants.outputs.models.wasserstein_cgan_28}"
+    path_wcgan = f"../{constants.outputs.models.wasserstein_cgan_gp_28}"
 
     os.makedirs(path_wcgan, exist_ok=True)
 
@@ -166,27 +188,26 @@ if __name__ == "__main__":
     X_reescalado = 2 * (X - minimo) / (maximo - minimo) - 1
     """
     Los parámetros en el estado del arte son:
-        - learning_rate = 0.00005
-        - n_critic = 5
-        - clip_value = 0.01
-        - batch_size = 64
-        - optimizer = RMSprop(learning_rate=0.00005)
+        - n_critics = 5
+        - lr = 0.0001
+        - gradient_penalty = 10
+        - optimizer = Adam(lr = 0.0001, beta_1 = 0, beta_2 = 0.9)
     """
     learning_rates = [0.00005, 0.0001, 0.0005, 0.001, 0.005]
     n_critics = [1, 2, 3, 4, 5]
-    clip_values = [0.001, 0.005, 0.01, 0.05, 0.1]
+    gradient_penalties = [5, 10, 15]
     latent_dim = 100
 
-    combinaciones = np.array(list(itertools.product(learning_rates, n_critics, clip_values)))
+    combinaciones = np.array(list(itertools.product(learning_rates, n_critics, gradient_penalties)))
     np.random.shuffle(combinaciones)
 
     for i, combinacion in enumerate(combinaciones):
-        lr, n_critic, clip_value = combinacion
+        lr, n_critic, gradient_penalty = combinacion
         lr = float(lr)
         n_critic = int(n_critic)
-        clip_value = float(clip_value)
+        gradient_penalty = float(gradient_penalty)
 
-        path_out = f"{path_wcgan}/lr={lr}/n_critic={n_critic}/clip_value={clip_value}"
+        path_out = f"{path_wcgan}/lr={lr}/n_critic={n_critic}/gradient_penalty={gradient_penalty}"
         if not os.path.exists(path_out):
             os.makedirs(f"{path_wcgan}/lr={lr}", exist_ok=True)
             os.makedirs(f"{path_wcgan}/lr={lr}/n_critic={n_critic}", exist_ok=True)
@@ -202,18 +223,24 @@ if __name__ == "__main__":
             os.makedirs(path_out_wcgan_learning_curves, exist_ok=True)
             os.makedirs(path_out_wcgan_gif, exist_ok=True)
 
-            print(f"Combinación {i+1}/{len(combinaciones)}")
-            print("="*90)
-            print(f"lr={lr}, n_critic={n_critic}, clip_value={clip_value}")
-            print("="*90)
+            print(f"Combinación {i + 1}/{len(combinaciones)}")
+            print("=" * 90)
+            print(f"lr={lr}, n_critic={n_critic}, gradient_penalty_weight={gradient_penalty}")
+            print("=" * 90)
 
             # constantes e hiperparámetros
-            optimizer = tf.keras.optimizers.RMSprop(learning_rate=lr)
+            optimizer = tf.keras.optimizers.Adam(learning_rate=lr, beta_1=0, beta_2=0.9)
             generator = build_generator(latent_dim=latent_dim, n_classes=7)
             critic = build_critic(input_shape=(28, 28, 1), n_classes=7)
 
-            wgan = wCGAN(generator=generator, critic=critic, clip_value=clip_value, n_critic=n_critic)
+            wgan = wCGAN_GP(generator=generator, critic=critic, n_critic=n_critic,
+                            gradient_penalty_weight=gradient_penalty)
             wgan.compile(opt_g=optimizer, opt_c=optimizer)
+
+            # tf.keras.utils.plot_model(critic, show_shapes=True, show_layer_activations=True,
+            #                           to_file=f"{model_architecture}/wasserstein_critic_28x28.png", dpi=120)
+            # tf.keras.utils.plot_model(generator, show_shapes=True, show_layer_activations=True,
+            #                           to_file=f"{model_architecture}/wasserstein_generator_28x28.png", dpi=120)
 
             # define the training dataset
             dataset = tf.data.Dataset.from_tensor_slices((X_reescalado, y_encoded)).shuffle(1000).batch(64)
@@ -249,5 +276,6 @@ if __name__ == "__main__":
             # Lista de objetos Image para cada imagen PNG
             image_list = [Image.open(os.path.join(path_out_wcgan_images, f)) for f in png_files]
             # Guardar las imágenes como un archivo GIF animado
-            image_list[0].save(f"{path_out_wcgan_gif}/training_process.gif", save_all=True, append_images=image_list[1:], duration=350,
+            image_list[0].save(f"{path_out_wcgan_gif}/training_process.gif", save_all=True,
+                               append_images=image_list[1:], duration=350,
                                loop=0)

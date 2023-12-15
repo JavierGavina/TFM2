@@ -4,11 +4,10 @@ import warnings
 from scipy.interpolate import griddata
 import sys
 
-sys.path.append("../")
+sys.path.append("../../")
 
-from src.constants import constants
-from src.preprocess import interpolacion_pixel_proximo
-
+from constants import constants
+from preprocess import interpolacion_pixel_proximo, parse_windows
 
 warnings.filterwarnings('ignore')
 

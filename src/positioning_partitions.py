@@ -1,19 +1,17 @@
 import pandas as pd
-import sklearn as sk
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 import sys
 import os
 from multiprocessing import cpu_count
 import matplotlib.pyplot as plt
 
-sys.path.append("..")
+from utils.constants import constants
 
-from src.constants import constants
-from positioning.utils import get_euclid_per_coord
-
-part_5vs18 = f"../{constants.data.partitions.PARTITION_5VS18}"
-part_10vs13 = f"../{constants.data.partitions.PARTITION_10VS13}"
-part_15vs8 = f"../{constants.data.partitions.PARTITION_15VS8}"
+part_5vs18 = constants.data.partitions.PARTITION_5VS18
+part_10vs13 = constants.data.partitions.PARTITION_10VS13
+part_15vs8 = constants.data.partitions.PARTITION_15VS8
 
 dict_inv = {v: k for k, v in constants.labels_dictionary_meters.items()}
 
@@ -25,7 +23,7 @@ pd.set_option('display.max_rows', None)
 
 
 def main():
-    path_partitions_output = "../outputs/positioning_partitions"
+    path_partitions_output = "outputs/positioning_partitions"
     os.makedirs(path_partitions_output, exist_ok=True)
 
     path_to_processed_radiomap = "processed/processed_radiomap.csv"
@@ -49,22 +47,22 @@ def main():
         ["Longitude", "Latitude"]].to_numpy()
     Xtest_15vs8, ytest_15vs8 = test_15vs8[constants.aps].to_numpy(), test_15vs8[["Longitude", "Latitude"]].to_numpy()
 
-    knn1_5vs18 = sk.neighbors.KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18, ytrain_5vs18)
-    knn1_10vs13 = sk.neighbors.KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
-                                                                                              ytrain_10vs13)
-    knn1_15vs8 = sk.neighbors.KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8, ytrain_15vs8)
+    knn1_5vs18 = KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18, ytrain_5vs18)
+    knn1_10vs13 = KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
+                                                                                 ytrain_10vs13)
+    knn1_15vs8 = KNeighborsRegressor(n_neighbors=1, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8, ytrain_15vs8)
 
-    knn5_5vs18 = sk.neighbors.KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18, ytrain_5vs18)
-    knn5_10vs13 = sk.neighbors.KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
-                                                                                              ytrain_10vs13)
-    knn5_15vs8 = sk.neighbors.KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8, ytrain_15vs8)
+    knn5_5vs18 = KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18, ytrain_5vs18)
+    knn5_10vs13 = KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
+                                                                                 ytrain_10vs13)
+    knn5_15vs8 = KNeighborsRegressor(n_neighbors=5, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8, ytrain_15vs8)
 
-    rf_5vs18 = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18,
-                                                                                               ytrain_5vs18)
-    rf_10vs13 = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
-                                                                                                ytrain_10vs13)
-    rf_15vs8 = sk.ensemble.RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8,
-                                                                                               ytrain_15vs8)
+    rf_5vs18 = RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_5vs18,
+                                                                                   ytrain_5vs18)
+    rf_10vs13 = RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_10vs13,
+                                                                                    ytrain_10vs13)
+    rf_15vs8 = RandomForestRegressor(n_estimators=500, n_jobs=cpu_count() - 3).fit(Xtrain_15vs8,
+                                                                                   ytrain_15vs8)
 
     knn1_5vs18_pred = knn1_5vs18.predict(Xtest_5vs18)
     knn1_10vs13_pred = knn1_10vs13.predict(Xtest_10vs13)
@@ -189,7 +187,7 @@ def main():
     tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tablas/tabla_metricas_per_coord.csv", index=False)
 
     aux = tabla_metricas_per_coord.copy()
-    y_max = np.ceil(np.max(aux["Mean Euclid"] + aux["Std Euclid"]))+0.5
+    y_max = np.ceil(np.max(aux["Mean Euclid"] + aux["Std Euclid"])) + 0.5
     y_min = np.floor(np.min(aux["Mean Euclid"] - aux["Std Euclid"]))
     colores = ["orange", "green", "purple"]
     plt.figure(figsize=(10, 15))
@@ -222,7 +220,8 @@ def main():
     plt.title("Barplot error per each model-partition")
     plt.bar(aux["Model_Partition"], aux["Mean Euclid"], color=colores)
     # color yerr
-    plt.errorbar(aux["Model_Partition"], aux["Mean Euclid"], yerr=aux["Std Euclid"], capthick=3, capsize=6, color="black")
+    plt.errorbar(aux["Model_Partition"], aux["Mean Euclid"], yerr=aux["Std Euclid"], capthick=3, capsize=6,
+                 color="black")
     # customized legend
     handles = [plt.Rectangle((0, 0), 1, 1, color=c, ec="k") for c in ["orange", "green", "purple"]]
     plt.legend(handles, ["KNN(k=1)", "KNN(k=5)", "RF"])

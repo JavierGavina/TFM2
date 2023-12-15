@@ -3,13 +3,13 @@ import numpy as np
 
 import os
 import glob
-import sys
 
 import tqdm
+import sys
 
 sys.path.append("..")
 
-from src.constants import constants
+from utils.constants import constants
 
 
 def parse_windows(n_max: int, window_size: int, step: int):

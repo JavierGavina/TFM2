@@ -1,23 +1,17 @@
 import numpy as np
-import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 import os
 import seaborn as sns
-import tqdm
 
-sys.path.append("..")
+# sys.path.append("..")
 
-from src.dataloader import DataLoader, get_radiomap_from_rpmap
+from src.utils.dataloader import get_radiomap_from_rpmap
 from src.constants import constants
-from src.preprocess import interpolacion_pixel_proximo
-from models.gans_utils import DataAugmentation, get_path_cgan, get_path_wcgan_gp, get_path_wcgan, \
-    incorpore_syntetic_data_to_real_data
+from src.models.gans_utils import incorpore_syntetic_data_to_real_data
 
-from positioning.utils import metrics_dist_euclid_per_coord, get_metrics
-import sklearn as sk
-from multiprocessing import cpu_count
+from src.positioning.utils import metrics_dist_euclid_per_coord
 
 # diccionario modelo -> color
 colors_models = {

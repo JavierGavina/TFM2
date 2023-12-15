@@ -114,7 +114,7 @@ def save_ap_gif(reference_point_map: np.ndarray, x_g: np.ndarray, y_g: np.ndarra
     ---------
     Carga de los datos:
 
-    >>> from src import dataloader
+    >>> from src.utils import dataloader
     >>> X, y, [x_coords, y_coords] = dataloader.DataLoader(data_dir=f"../{constants.data.FINAL_PATH}/groundtruth.csv",
                                                            aps_list=constants.aps, batch_size=30, step_size=5,
                                                            size_reference_point_map=300,

@@ -1,9 +1,10 @@
 import os
 
+import warnings
 
-from src.constants import constants
-from src.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
-from src.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
+from utils.constants import constants
+from utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
+from utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
 
 # Definición de las constantes de los directorios
 CHECKPOINT_DATA_PATH = constants.data.train.CHECKPOINT_DATA_PATH
@@ -14,6 +15,8 @@ t_max_sampling = constants.T_MAX_SAMPLING
 
 # Diccionario de labels a metros
 labels_dictionary_meters = constants.labels_dictionary_meters
+
+warnings.filterwarnings("ignore")
 
 
 def main():

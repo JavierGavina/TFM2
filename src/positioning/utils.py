@@ -7,8 +7,8 @@ import tqdm
 
 import sys
 
-sys.path.append("../")
-from src.constants import constants
+sys.path.append("../../")
+from src.utils.constants import constants
 
 
 def get_rmse(y_pred, y_true):

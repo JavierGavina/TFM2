@@ -9,13 +9,13 @@ import tqdm
 
 sys.path.append("..")
 
-from src.dataloader import DataLoader, get_radiomap_from_rpmap
-from src.constants import constants
-from src.preprocess import interpolacion_pixel_proximo
-from models.gans_utils import DataAugmentation, get_path_cgan, get_path_wcgan_gp, get_path_wcgan, \
+from src.utils.dataloader import DataLoader, get_radiomap_from_rpmap
+from src.utils.constants import constants
+from src.utils.preprocess import interpolacion_pixel_proximo
+from src.models.gans_utils import DataAugmentation, get_path_cgan, get_path_wcgan_gp, get_path_wcgan, \
     incorpore_syntetic_data_to_real_data
 
-from positioning.utils import metrics_dist_euclid_per_coord, get_metrics
+from src.positioning.utils import metrics_dist_euclid_per_coord, get_metrics
 import sklearn as sk
 from multiprocessing import cpu_count
 

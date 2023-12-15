@@ -1,11 +1,11 @@
 import numpy as np
 
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, Conv2DTranspose, Reshape, BatchNormalization, LeakyReLU, \
-    Dropout, Input, Concatenate, Embedding
-from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, Conv2DTranspose, Reshape, LeakyReLU, \
+    Input, Concatenate, Embedding
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import History, ReduceLROnPlateau
+from tensorflow.keras.callbacks import History
 
 from PIL import Image
 
@@ -13,13 +13,13 @@ import matplotlib.pyplot as plt
 import os
 import sys
 
-sys.path.append("..")
+sys.path.append("../..")
 
-from src import dataloader
-from src.constants import constants
-from src.dataloader import labelEncoding, labelDecoding
-from models.gans_utils import cGAN
-from models.callbacks import LoggingCheckpointTraining, SaveImageTraining
+from src.utils import dataloader
+from src.utils.constants import constants
+from src.utils.dataloader import labelEncoding
+from src.models.gans_utils import cGAN
+from src.models.callbacks import LoggingCheckpointTraining, SaveImageTraining
 
 
 def define_discriminator(input_shape=(28, 28, 1), n_classes=7):
