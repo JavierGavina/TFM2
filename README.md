@@ -12,47 +12,50 @@ With the continued growth of the Internet of Things (IoT) and the increasing dem
 
 ## Project Structure
 
-La estructura entera del proyecto se basa en 4 directorios principales:
+The entire structure of the project is based on 4 main directories:
 
 <ul>
-    <li><b>data:</b> Directorio en la que se encuentran tanto los datos obtenidos usando la aplicación <b>get_sensordata</b>, como los datos preprocesados</li>
-    <li><b>info:</b> Directorio en el que se encuentran los ficheros de información del proyecto:</li>
+    <li><b>data:</b> Directory where the data obtained using the application <b>get_sensordata</b> is located</li>
+    <li><b>info:</b> Directory where project information files are stored:</li>
     <ul>
-        <li><b>coordenadas_train.csv:</b> Fichero con las coordenadas usadas en cada punto de referencia de Train</li>
-        <li><b>coordenadas_test.csv:</b> Fichero con las coordenadas usadas en cada punto de referencia de Test</li>
-        <li><b>mapa_plano.png:</b> Mapa del plano en la recogida de datos, indicando la posición de cada punto de referencia, tanto en entrenamiento como en test</li>
-        <li><b>Documentación del proyecto.docx:</b> Word con documentación adicional del proyecto</li>
+        <li><b>train_coordinates.csv:</b> File with the coordinates used at each reference point for training</li>
+        <li><b>test_coordinates.csv:</b> File with the coordinates used at each reference point for testing</li>
+        <li><b>plane_of_data.png:</b> Map of the data collection plane, indicating the position of each reference point in both training and testing</li>
+        <li><b>preprocessing_workflow.png:</b> Flowchart of the preprocessing process</li>
+        <li><b>Project documentation.docx:</b> Word document with additional project documentation</li>
     </ul>
-    <li><b>outputs:</b> Directorio en el que se encuentran todas las salidas del proyecto:</li>
+    <li><b>outputs:</b> Directory where all project outputs are stored:</li>
     <ul>
-        <li>Imágenes</li>
+        <li>Preprocessed data</li>
+        <li>Images</li>
         <li>Gifs</li>
-        <li>Checkpoints de modelos</li>
-        <li>Tablas con métricas</li>
+        <li>Model Checkpoints</li>
+        <li>Metric Tables</li>
         <li>...</li>
     </ul>
-    <li><b>src: </b> Directorio con el código fuente de todo el proyecto, hecho para realizar las ejecuciones necesarias de forma modular. Dentro de este directorio se encuentran todos los <b>scripts.py</b> que ejecutan alguna acción determinada en un proceso: <b>process_train.py</b>, <b>process_test.py</b>  <b>process_partitions.py</b> y <b>positioning_partitions.py</b>.
-        Además, en el módulo <b>utils</b> se encuentran definidos las constantes, los métodos y las clases fundamentales para el desarrollo de todo el proyecto.</li>
+    <li><b>src: </b> Directory with the source code for the entire project, designed for modular execution. Within this directory, all <b>scripts.py</b> files that perform specific actions in a process are located, such as <b>process_train.py</b>, <b>process_test.py</b>, <b>process_partitions.py</b>, and <b>positioning_partitions.py</b>.
+        Additionally, in the <b>utils</b> module, constants, methods, and fundamental classes for the development of the entire project are defined.</li>
 </ul>
 
-Los principales scripts implementados para la ejecución del proyecto son:
-<li><b>obtainDataINITandPositioning.py: </b> Está diseñado para ejecutarse del siguiente modo en la terminal:</li>
+The main scripts implemented for the project execution are:
+
+<li><b>obtainDataINITandPositioning.py: </b>Designed to be executed in the terminal in the following way:</li>
 
 ```python
 python obtainDataINITandPositioning.py 
 ```
 
-Este script se encargará de procesar los datos de entrenamiento, de test, crear las particiones de datos de entrenamiento y test utilizando los datos de entrenamiento, y de aplicar la estimación de la posición con las particiones. Devolviendo así la tabla de métricas, la tabla de métricas para cada coordenada y gráficas de error de posicionamiento
+This script will be responsible for processing the training and test data, creating training and test data partitions using the training data, and applying position estimation with the partitions. It will thus return the metric table, the metric table for each coordinate, and positioning error graphs
 
+## Project Data, Preprocessing, and Structuring
 
-## Datos del proyecto, preprocesado y estructuración
+<img src="info/plane_of_data.png" alt="Map of the INIT building floor used in data collection, indicating the position of each training reference point (blue) and test reference points (red)"></img>
 
-<img src="info/mapa_datos.png" alt="Mapa del plano del edificio INIT, usado en la recogida de datos, indicando la posición de cada punto de referencia de entrenamiento (color azul) y los puntos de referencia de test (color rojo)"></img>
+The data has been manually collected using the <b>get_sensordata</b> application in the INIT building.
+The image above shows a map of the floor and the location of various data reference points. The blue color represents Train points, while the red color represents Test points.
 
-Los datos se han recogido manualmente utilizando la aplicación <b>get_sensordata</b> en el edificio del INIT.
-La imagen de arriba muestra un mapa de la planta y de la localización de los distintos puntos de referencia de datos. El color azul representa los puntos de Train, mientras que el color rojo representa los puntos de Test.
+A file is generated for each reference point, and once the data is collected using an Android device (mobile, tablet, ...), <u>it is manually transferred</u> to the following directory (in both train and test):
 
-Se genera un fichero por cada punto de referencia y, una vez recogidos los datos con algún dispositivo Android (móvil, Tablet, ...), <u> se traspasan manualmente</u> al siguiente directorio (en train y en test):
 
 ```python
 data
@@ -63,14 +66,14 @@ data
 │   ├── initial_rp_data (TEST DATA)
 ```
 
-Si consideramos que cada baldosa, representada en las rejillas grises de la imagen, mide 60 centímetros, entonces realizamos una transformación de coordenadas ficticias (baldosas) a coordenadas longitud, latitd (metros). La tabla de coordenadas la podemos visualizar en las siguientes tablas:
+If we consider that each tile, represented by the gray grids in the image, measures 60 centimeters, then we perform a transformation from fictitious tile coordinates to longitude and latitude coordinates (meters). The coordinate table can be visualized in the following tables:
 
 <table>
-    <caption>Tabla de puntos de referencia de TRAIN</caption>
+    <caption>Reference points table of TRAIN</caption>
     <tr>
         <th>Label</th>
-        <th>Longitud</th>
-        <th>Latitud</th>
+        <th>Longitude</th>
+        <th>Latitude</th>
     </tr>
     <tr>
         <td>0</td>
@@ -188,33 +191,44 @@ Si consideramos que cada baldosa, representada en las rejillas grises de la imag
         <td>14.4</td>
 </table>
 
-Dentro del directorio <b>src</b>, tenemos dos scripts de Python: process_train.py y process_test.py. La ejecución de cada uno de estos scripts (desde el script del directorio principal: <b>obtainDataINITandPositioning.py</b>) nos va a realizar todo el preprocesado necesario para obtener el radiomap preparado para el entrenamiento de los modelos de posicionamiento.
+Within the <b>src</b> directory, we have two Python scripts: <b>process_train.py</b> and <b>process_test.py</b>. Running each of these scripts (from the main directory script: <b>obtainDataINITandPositioning.py</b>) will perform all the preprocessing necessary to obtain the radiomap ready for training positioning models.
 
-La ejecución de estos scripts nos proporcionará el siguiente directorio de salida:
-(nuevos ficheros y directorios marcados con dos asteriscos)
+The execution of these scripts will provide the following output directory in the main <b>output</b> folder:
+(new files and directories marked with double asterisks)
+
 
 ```python
 data
 |----train
 |	|---- initial_rp_data
-|	|---- checkpoint_groundtruth **
-|	|---- raw_radiomap **
-|	|	|---- raw_radiomap.csv **
-|	|---- processed_radiomap **
-|	|	|----- processed_radiomap.csv **
+
 |	
 |---- test
 |	|---- initial_rp_data
-|	|---- checkpoint_groundtruth **
-|	|---- raw_radiomap **
-|	|	|---- raw_radiomap.csv **
-|	|---- processed_radiomap **
-|	|	|----- processed_radiomap.csv **
+|
+|---- outputs **
+|         |---- data **
+|         |       |---- train **
+|         |       |       |---- raw_radiommap **
+|         |       |       |       |---- raw_radiomap.csv **
+|         |       |       |---- processed_radiomap **
+|         |       |       |       |---- processed_radiomap.csv **
+|         |       |       |---- checkpoint_groundtruth **
+|         |       |
+|         |       |---- test **
+|         |       |       |---- raw_radiommap **
+|         |       |       |       |---- raw_radiomap.csv **
+|         |       |       |---- processed_radiomap **
+|         |       |       |       |---- processed_radiomap.csv **
+|         |       |       |---- checkpoint_groundtruth **
 ```
 
-Donde <b>raw_radiomap.csv</b> corresponde con el radiomap sin escalado de los datos, por lo que se presenta en unidades (decibelios), mientras que <b>processed_radiomap.csv</b> presenta los niveles de RSS escalados entre 0 y 1.
+Where <b>raw_radiomap.csv</b> corresponds to the unscaled radiomap of the data, presented in units (decibels), while <b>processed_radiomap.csv</b> presents the scaled RSS levels between 0 and 1.
 
-Los scripts de preprocesado, dependen directamente de los métodos implementados en los scripts <b>preprocess.py</b> y <b>constants.py</b> que se encuentran en el directorio <b>src/utils</b>
+The preprocessing scripts depend directly on the methods
+implemented in the scripts <b>preprocess.py</b> and <b>constants.py </b>,
+which are located in the <b>src/utils</b> directory.
+
 
 ```python
 root
@@ -236,46 +250,53 @@ root
 |---- obtainDataINITandPositioning.py
 
 ```
-Dentro de las constantes, en el script constants.py, es importante definir las siguientes de manera correcta, y adecuado para el sistema de directorios en el trabajo, para que el preprocesado se realice de manera correcta:
+Within the constants, in the script constants.py, it is important to correctly define the following, suitable for the directory system in the project, for the preprocessing to be carried out correctly:
 
-<b>constants.data.train.INITIAL_DATA:</b> dirección de los datos iniciales de entrenamiento.
-<b>constants.data.train.CHECKPOINT_DATA_PATH:</b> dirección de los checkpoints de los datos de entrenamiento.
-<b>constants.data.train.RAW_OUT_PATH:</b> dirección del radiomap en bruto de entrenamiento.
-<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de entrenamiento.
-<b>constants.data.train.INITIAL_DATA:</b> dirección de los datos iniciales de test.
-<b>constants.data.train.CHECKPOINT_DATA_PATH:</b> dirección de los checkpoints de los datos de test.
-<b>constants.data.train.RAW_OUT_PATH:</b> dirección del radiomap en bruto de test.
-<b>constants.data.train.PROC_OUT_PATH:</b> dirección del radiomap escalado de test.<br>
-<b>constants.aps:</b> lista con los puntos de acceso WiFi a considerar para la obtención del fingerprint.<br>
-<b>constants.labels_dictionary_meters:</b> diccionario que transforma de label a coordenadas en entrenamiento.<br>
-<b>constants.labels_dictionary_meters_test:</b> diccionario que transforma de label a coordenadas en test.<br>
-<b>constants.labels_train:</b> lista con las labels (puntos de acceso) a considerar en entrenamiento.<br>
-<b>constants.labels_test:</b> lista con las labels (puntos de acceso) a considerar en test.<br>
-<b>constants.T_MAX_SAMPLING:</b> tiempo máximo (en segundos) de muestreo en cada label de entrenamiento.
-<b>constants.T_MAX_SAMPLING_TEST:</b> tiempo máximo (en segundos) de muestreo en cada label de test.
+<b>constants.data.train.INITIAL_DATA:</b> Directory of initial training data.
+<b>constants.data.train.CHECKPOINT_DATA_PATH:</b> Directory of training data checkpoints.
+<b>constants.data.train.RAW_OUT_PATH:</b> Directory of raw training radiomap.
+<b>constants.data.train.PROC_OUT_PATH:</b> Directory of scaled training radiomap.
+<b>constants.data.test.INITIAL_DATA:</b> Directory of initial test data.
+<b>constants.data.test.CHECKPOINT_DATA_PATH:</b> Directory of test data checkpoints.
+<b>constants.data.test.RAW_OUT_PATH:</b> Directory of raw test radiomap.
+<b>constants.data.test.PROC_OUT_PATH:</b> Directory of scaled test radiomap.
+<b>constants.aps:</b> List of WiFi access points to consider for fingerprint acquisition.
+<b>constants.labels_dictionary_meters:</b> Dictionary that transforms from label to coordinates in training.
+<b>constants.labels_dictionary_meters_test:</b> Dictionary that transforms from label to coordinates in test.
+<b>constants.labels_train:</b> List of labels (access points) to consider in training.
+<b>constants.labels_test:</b> List of labels (access points) to consider in test.
+<b>constants.T_MAX_SAMPLING:</b> Maximum time (in seconds) for sampling at each training label.
+<b>constants.T_MAX_SAMPLING_TEST:</b> Maximum time (in seconds) for sampling at each test label.
+Finally, using the methods described in <b>preprocess.py</b>, when running the scripts <b>process_train.py</b> and <b>process_test.py</b>, the execution flow will be as follows:
 
+<img src="info/preprocessing_workflow.png" alt="Execution flow of data preprocessing"></img>
 
-Por último, haciendo uso de los métodos descritos en <b>preprocess.py</b>, al ejecutar los scripts <b>process_train.py</b> y <b>process_test.py</b>. El flujo de ejecución será el siguiente:
+The process can be summarized as follows:
 
-<img src="info/flujo_preprocesado.png" alt="Flujo de ejecución del preprocesado de los datos"></img>
-
-El proceso se resume en lo siguiente:
-Se procesan los ficheros log de <b>get_sensordata</b>, para transformarlos a un formato en el que cada fila representa el fingerprint de un segundo, como la media de todas las observaciones en ese periodo de RSS para cada AP.
-Posteriormente, se cambian los NAs resultantes por el valor mínimo global – 1, esto se hace para que posteriormente, con el escalado, el 0 represente ausencia de RSS.
-También se aplica un promediado móvil en ventanas de 30 segundos con un overlapping de 5 segundos, de este modo, suavizamos los valores obtenidos en el RSS. 
-Finalmente, se obtiene el fichero de <b>raw_radiomap.csv</b> (sin escalado), y <b>processed_radiomap.csv</b> (con escalado)
+Log files from <b>get_sensordata</b> are processed to transform them into a format where each row represents the fingerprint of a second, as the average of all RSS observations in that period for each access point (AP).
+The resulting NAs are replaced by the global minimum value - 1. This is done so that later, with scaling, 0 represents the absence of RSS.
+A moving average is applied in windows of 30 seconds with a 5-second overlap, smoothing the RSS values.
+Finally, the <b>raw_radiomap.csv</b> (unscaled) and <b>processed_radiomap.csv</b> (scaled) files are obtained
 
 
 ## Datos de particiones en Train 
 
-También se ha planteado en el proyecto, para probar otras alternativas, ha realizar varias particiones de train y de test con los mismos datos recogidos en train, para poder estudiar los efectos en recogidas de datos de tiempos similares.
-Para ello, se ha implementado el script process_partitions.py. El objetivo de este script será obtener el siguiente directorio de salida aplicando los mismos pasos de preprocesado que en el caso de train, pero con puntos de referencia distintos.
-El script devuelve el siguiente directorio:
+Also, in the project, it has been proposed to test other alternatives by creating multiple train and test partitions using the same data collected in train. This allows studying the effects on data collection for similar time periods.
+
+To achieve this, the script <b>process_partitions.py</b> has been implemented. The purpose of this script is to obtain the following output directory by applying the same preprocessing steps as in the case of train but with different reference points.
+
+The script returns the following directory:
+
 
 ```python
-data
-|----train
-|---- test
+root
+|
+|----data
+|     |----train
+|     |---- test
+|---- outputs **
+|      |---- data **
+|      |       |---- partitions **
 |---- partitions **
 |	      |---- partition_5vs18
 |	      |		   |---- train
@@ -289,6 +310,7 @@ data
 |	      |	   	   |       |	  |---- raw_radiomap.csv
 |	      |	   	   |       |---- processed
 |	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |	   	   |       |	 
 |	      |---- partition_10vs13
 |	      |	   	   |---- train
 |	      |	   	   |       |---- raw
@@ -301,6 +323,7 @@ data
 |	      |	   	   |       |	  |---- raw_radiomap.csv
 |	      |	   	   |       |---- processed
 |	      |	   	   |       |	  |---- processed_radiomap.csv
+|	      |	   	   |       |	 
 |	      |---- partition_15vs8
 |	      |	   	   |---- train
 |	      |	   	   |       |---- raw
@@ -313,9 +336,10 @@ data
 |	      |	   	   |       |	  |---- raw_radiomap.csv
 |	      |	   	   |       |---- processed
 |	      |	   	   |       |	  |---- processed_radiomap.csv
+
 ```
 
-En este paso se han planteado 3 alternativas con los datos de train, representadas en la siguiente tabla:
+In this step, 3 alternatives have been proposed with the train data, represented in the following table:
 
 <table class="default">
   <colgroup>
@@ -355,19 +379,21 @@ En este paso se han planteado 3 alternativas con los datos de train, representad
     </tr>
 </table>
 
-Para el correcto funcionamiento del script process_partitions.py. Hay que asegurarse que las siguientes constantes en <b>src/utils/constants.py</b> estén correctamente definidas:
+For the proper functioning of the script <b>process_partitions.py</b>, it is essential to ensure that the following constants in <b>src/utils/constants.py</b> are correctly defined:
 
-<b>constants.labels_partition_5vs18:</b> lista con puntos de referencia de train a usar en la partición 5 vs 18 <br>
-<b>constants.labels_partition_10vs13:</b> lista con puntos de referencia de train a usar en la partición 10 vs 13 <br>
-<b>constants.labels_partition_15vs8:</b> lista con puntos de referencia de train a usar en la partición 15 vs 8 <br>
-<b>constants.data.partitions.PARTITION_5VS18:</b> directorio de salida de la partición 5 vs 18 <br>
-<b>constants.data.partitions.PARTITION_10VS13:</b> directorio de salida de la partición 10 vs 13 <br>
-<b>constants.data.partitions.PARTITION_15VS8:</b> directorio de salida de la partición 15 vs 8 <br>
+<b>constants.labels_partition_5vs18:</b> List of train reference points to use in the 5 vs 18 partition.<br>
+<b>constants.labels_partition_10vs13:</b> List of train reference points to use in the 10 vs 13 partition.<br>
+<b>constants.labels_partition_15vs8:</b> List of train reference points to use in the 15 vs 8 partition.<br>
+<b>constants.data.partitions.PARTITION_5VS18:</b> Output directory of the 5 vs 18 partition.<br>
+<b>constants.data.partitions.PARTITION_10VS13:</b> Output directory of the 10 vs 13 partition.<br>
+<b>constants.data.partitions.PARTITION_15VS8:</b> Output directory of the 15 vs 8 partition.<br>
 
-## Estimación de la posición
 
-Para la estimación de la posición, se ha implementado el script <b>positioning_partitions.py</b>, dentro del directorio <b>src</b>.
-Este script se encarga de realizar la estimación de la posición en cada una de las particiones de train, y de devolver las tablas de métricas y las gráficas de error de posicionamiento en el directorio <b> outputs/positioning_partitions</b>.
+## Positioning Estimation by Partitions
+
+For position estimation, the script <b>positioning_partitions.py</b> has been implemented within the <b>src</b> directory.
+This script is responsible for estimating the position in each of the train partitions and returning the metric tables and positioning error graphs to the directory <b>outputs/positioning_partitions</b>.
+
 
 ```python
 root
@@ -377,22 +403,22 @@ root
 |---- src
 |    
 |---- outputs 
+|      |---- data
 |      |---- positioning_partitions **
-|      |       |---- tablas **
-|      |       |       |---- tabla_metricas.csv **
-|      |       |       |---- tabla_metricas_per_coord.csv **
+|      |       |---- tables **
+|      |       |       |---- metrics.csv **
+|      |       |       |---- metrics_per_coord.csv **
 |      |       |       
 |      |       |---- plots **
 |      |               |---- barplot metrics.png **
-|      |               |---- errorbar metrics.png **
+|      |               |---- errorbar_metrics.png **
 ```
 
-Una vez ejecutamos el script, obtenemos en el directorio <b>outputs/positioning_partitions/plots</b> las siguientes gráficas que definen el error obtenido en la estimación de la posición:
+After executing the script, we obtain the following graphs in the directory <b>outputs/positioning_partitions/plots</b> that define the error obtained in the position estimation:
 
-<img src="outputs/positioning_partitions/plots/errorbar metrics.png" alt="Errorbar de las métricas de error de posicionamiento"></img>
-<img src="outputs/positioning_partitions/plots/barplot metrics.png" alt="Barplot de las métricas de error de posicionamiento"></img>
+<img src="output/positioning_partitions/plots/errorbar_metrics.png" alt="Errorbar of positioning error metrics"></img>
+<img src="output/positioning_partitions/plots/barplot metrics.png" alt="Barplot of positioning error metrics"></img>
 
+The first graph shows the positioning error for each model in each coordinate, sorted from lowest to highest error. In this case, the models kNN(K=1), KNN(K=5), and RF(n_estimators=500) are represented with orange, green, and purple colors, respectively. This graph is used to display the positioning error in each partition of the study, allowing a comparison of the results obtained in each. For each point, the mean (colored dot) and standard deviation (vertical bar) of the positioning error in each partition are represented.
 
-La primera gráfica nos muestra el error de posicionamiento para cada modelo en cada coordenada, ordenado de menor a mayor según el error. Para ello, se ha empleado en este caso los modelos kNN(K=1), KNN(K=5) y RF(n_estimators=500), representados con los colores naranja, verde y morado respectivamente. Realizamos esta gráfica para mostrar el error de posicionamiento en cada partición del estudio, y así poder comparar los resultados obtenidos en cada una de ellas. Para cada punto, tenemos representado la media (punto con color) y la desviación típica (barra vertical) del error de posicionamiento en cada partición.
-
-Por otro lado, la segunda gráfica nos muestra el error en una gráfica de barras para cada modelo y partición. En este caso, se ha representado el error medio de posicionamiento para cada modelo en cada partición, y se ha representado la desviación típica del error de posicionamiento en cada partición. De este modo, podemos comparar el error de posicionamiento medio de cada modelo de cada partición.
+On the other hand, the second graph shows the error in a bar chart for each model and partition. In this case, the average positioning error for each model in each partition is represented, along with the standard deviation of the positioning error in each partition. This allows a comparison of the average positioning erro

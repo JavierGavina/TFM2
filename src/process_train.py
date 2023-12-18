@@ -6,7 +6,6 @@ from src.utils.constants import constants
 from src.utils.preprocess import correctWifiFP, read_checkpoint, proximity_pixel_interpolation
 from src.utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
 
-
 CHECKPOINT_DATA_PATH = constants.data.train.CHECKPOINT_DATA_PATH
 WIFI_CHECKPOINT = f"{CHECKPOINT_DATA_PATH}/Wifi"
 
@@ -20,7 +19,9 @@ warnings.filterwarnings("ignore")
 
 
 def processTrain():
-    get_checkpoints_data(constants.data.train.INITIAL_DATA, labels_dictionary_meters)
+    get_checkpoints_data(dir_data=constants.data.train.INITIAL_DATA,
+                         out_dir="output/data/train",
+                         dict_labels=labels_dictionary_meters)
 
     wifi_data = read_checkpoint(WIFI_CHECKPOINT, constants.labels_train)
     wifi_corrected = correctWifiFP(wifi_data=wifi_data,
@@ -30,7 +31,7 @@ def processTrain():
     wifi_corrected = proximity_pixel_interpolation(wifi_corrected, threshold=30)
 
     '''
-    Obtain wifi without scaling the data to 0 - 1
+    Obtain Wi-Fi without scaling the data to 0 - 1
     '''
 
     raw_wifi = rolling_mean(wifi_corrected, window_size=30, step=5)
@@ -47,4 +48,3 @@ def processTrain():
 
     os.makedirs(constants.data.train.PROC_OUT_PATH, exist_ok=True)  # Creamos el directorio procesado
     proc_wifi.to_csv(f"{constants.data.train.PROC_OUT_PATH}/processed_radiomap.csv", index=False)
-

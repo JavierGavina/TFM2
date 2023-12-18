@@ -40,7 +40,7 @@ def parse_windows(n_max: int, window_size: int, step: int):
     return [(i, min(i + window_size, n_max)) for i in range(0, n_max, step) if i + window_size <= n_max]
 
 
-def get_checkpoints_data(dir_data: str, dict_labels) -> pd.DataFrame:
+def get_checkpoints_data(dir_data: str, out_dir: str, dict_labels) -> pd.DataFrame:
     """
     Extracts and organizes checkpoint data from labeled sources and saves it in a structured format.
 
@@ -64,7 +64,6 @@ def get_checkpoints_data(dir_data: str, dict_labels) -> pd.DataFrame:
     >>> dict_labels = {'label1': (lat1, lon1), 'label2': (lat2, lon2), ...}
     >>> get_checkpoints_data(dir_data, dict_labels)
     """
-    out_dir = "/".join(dir_data.split("/")[:-1])
     CHECKPOINT_DATA_PATH = f"{out_dir}/checkpoint_groundtruth"
     WIFI_CHECKPOINT = f"{CHECKPOINT_DATA_PATH}/Wifi"
     os.makedirs(CHECKPOINT_DATA_PATH, exist_ok=True)

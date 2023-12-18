@@ -20,7 +20,9 @@ warnings.filterwarnings("ignore")
 
 
 def processTest():
-    get_checkpoints_data(dir_data=constants.data.test.INITIAL_DATA, dict_labels=labels_dictionary_meters)
+    get_checkpoints_data(dir_data=constants.data.test.INITIAL_DATA,
+                         out_dir="output/data/test",
+                         dict_labels=labels_dictionary_meters)
 
     wifi_data = read_checkpoint(WIFI_CHECKPOINT, constants.labels_test)
     wifi_corrected = correctWifiFP(wifi_data=wifi_data,

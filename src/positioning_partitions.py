@@ -17,7 +17,7 @@ dict_inv = {v: k for k, v in constants.labels_dictionary_meters.items()}
 
 
 def getPositioningWithPartitions():
-    path_partitions_output = "outputs/positioning_partitions"
+    path_partitions_output = "output/positioning_partitions"
     os.makedirs(path_partitions_output, exist_ok=True)
 
     path_to_processed_radiomap = "processed/processed_radiomap.csv"
@@ -170,13 +170,14 @@ def getPositioningWithPartitions():
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
 
+    os.makedirs(f"{path_partitions_output}/tables", exist_ok=True)
+    os.makedirs(f"{path_partitions_output}/plots", exist_ok=True)
+
     tabla_metricas = tabla_metricas_per_coord.groupby(["Model", "Partition"]) \
         .mean(numeric_only=True)[["Mean Euclid", "Std Euclid"]] \
         .reset_index()
     tabla_metricas.to_csv(f"{path_partitions_output}/tables/metrics.csv", index=False)
 
-    os.makedirs(f"{path_partitions_output}/tables", exist_ok=True)
-    os.makedirs(f"{path_partitions_output}/plots", exist_ok=True)
     tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tables/metrics_per_coord.csv", index=False)
 
     aux = tabla_metricas_per_coord.copy()

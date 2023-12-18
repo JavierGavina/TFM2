@@ -15,15 +15,15 @@ class Train:
     """
     # Definición de las constantes
     INITIAL_DATA = "data/train/initial_rp_data"  # La dirección de los datos extendida
-    CHECKPOINT_DATA_PATH = "data/train/checkpoint_groundtruth"
-    RAW_OUT_PATH = "data/train/raw_radiomap"
-    PROC_OUT_PATH = "data/train/processed_radiomap"
+    CHECKPOINT_DATA_PATH = "output/data/train/checkpoint_groundtruth"
+    RAW_OUT_PATH = "output/data/train/raw_radiomap"
+    PROC_OUT_PATH = "output/data/train/processed_radiomap"
 
 
 class Partitions:
-    PARTITION_5VS18 = "data/partitions/partition_5vs18"
-    PARTITION_10VS13 = "data/partitions/partition_10vs13"
-    PARTITION_15VS8 = "data/partitions/partition_15vs8"
+    PARTITION_5VS18 = "output/data/partitions/partition_5vs18"
+    PARTITION_10VS13 = "output/data/partitions/partition_10vs13"
+    PARTITION_15VS8 = "output/data/partitions/partition_15vs8"
 
 
 class Test:
@@ -44,9 +44,9 @@ class Test:
 
     # Definición de las constantes
     INITIAL_DATA = "data/test/initial_rp_data"  # La dirección de los datos extendida
-    CHECKPOINT_DATA_PATH = "data/test/checkpoint_groundtruth"
-    RAW_OUT_PATH = "data/test/raw_radiomap"
-    PROC_OUT_PATH = "data/test/processed_radiomap"
+    CHECKPOINT_DATA_PATH = "output/data/test/checkpoint_groundtruth"
+    RAW_OUT_PATH = "output/data/test/raw_radiomap"
+    PROC_OUT_PATH = "output/data/test/processed_radiomap"
 
 
 class Directories:
@@ -66,53 +66,6 @@ class Directories:
     partitions = Partitions()
 
 
-class Positioning:
-    """
-    Class that contains the constants for the positioning outputs of the project.
-
-    Attributes:
-    ___________
-        POSITIONING: str
-            The directory for positioning models.
-        POSITIONING_ESTIMATION: str
-            The directory for positioning estimation models.
-    """
-
-    positioning_path = "outputs/positioning"
-    without_rpmap = f"{positioning_path}/without_rpmap"
-    rpmap = f"{positioning_path}/rpmap"
-    rpmap_data_augmentation = f"{positioning_path}/rpmap_data_augmentation"
-
-
-class Architectures:
-    """
-    Class that contains the constants for the directories of the model architectures.
-    """
-
-    arquitectures = "outputs/model_architecture"
-    cgan_300 = f"{arquitectures}/cGAN_300_300"
-    cgan_28 = f"{arquitectures}/cGAN_28_28"
-
-
-class Models:
-    """
-    Class that contains the constants for the directories of the models in the project.
-    """
-
-    training = "outputs/process_training"
-    cgan_300 = "outputs/process_training/cGAN_300_300"
-    cgan_28 = "outputs/process_training/cGAN_28_28"
-    wasserstein_cgan_28 = "outputs/process_training/wasserstein_cGAN_28_28"
-    wasserstein_cgan_gp_28 = "outputs/process_training/wasserstein_cGAN_GP_28_28"
-
-
-class RPMAP:
-    PATH_RPMAP = "outputs/RPMap"
-    rpmap_300_overlapping = f"{PATH_RPMAP}/rpmap_300_overlapping"
-    rpmap_300_sinOverlapping = f"{PATH_RPMAP}/rpmap_300_sinOverlapping"
-    rpmap_28_overlapping = f"{PATH_RPMAP}/rpmap_28_overlapping"
-
-
 class Outputs:
     """
     Class that contains the constants for the directories of the project outputs.
@@ -127,10 +80,10 @@ class Outputs:
 
     PATH_OUTPUTS = "outputs"
     GENERATIVE_METRICS = "outputs/generative_metrics"
-    models = Models()
-    rpmap = RPMAP()
-    architectures = Architectures()
-    positioning = Positioning()
+    OUT_DATA = "outputs/data"
+    PARTITIONS = "outputs/data/partitions"
+    TRAIN_OUT = "outputs/data/train"
+    TEST_OUT = "outputs/data/test"
 
 
 class constants:

@@ -27,7 +27,7 @@ warnings.filterwarnings("ignore")
 
 
 def processPartitions():
-    os.makedirs("data/partitions", exist_ok=True)
+    os.makedirs("output/data/partitions", exist_ok=True)
     os.makedirs(part_5vs18, exist_ok=True)
     os.makedirs(f"{part_5vs18}/train", exist_ok=True)
     os.makedirs(f"{part_5vs18}/train/raw", exist_ok=True)
