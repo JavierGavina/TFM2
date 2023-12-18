@@ -3,17 +3,17 @@ import os
 import warnings
 
 from src.utils.constants import constants
-from src.utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
+from src.utils.preprocess import correctWifiFP, read_checkpoint, proximity_pixel_interpolation
 from src.utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
 
-# Definición de las constantes de los directorios
+
 CHECKPOINT_DATA_PATH = constants.data.train.CHECKPOINT_DATA_PATH
 WIFI_CHECKPOINT = f"{CHECKPOINT_DATA_PATH}/Wifi"
 
-# Tiempo maximo de muestreo por label
+# Maximum sampling time per label
 t_max_sampling = constants.T_MAX_SAMPLING
 
-# Diccionario de labels a metros
+# Dictionary from labels to meters
 labels_dictionary_meters = constants.labels_dictionary_meters
 
 warnings.filterwarnings("ignore")
@@ -27,10 +27,10 @@ def processTrain():
                                    t_max_sampling=t_max_sampling,
                                    dict_labels_to_meters=labels_dictionary_meters)
     wifi_corrected = fix_na_wifi(wifi_corrected)
-    wifi_corrected = interpolacion_pixel_proximo(wifi_corrected, threshold=30)
+    wifi_corrected = proximity_pixel_interpolation(wifi_corrected, threshold=30)
 
     '''
-    Obtenemos wifi sin escalar los datos a 0 - 1
+    Obtain wifi without scaling the data to 0 - 1
     '''
 
     raw_wifi = rolling_mean(wifi_corrected, window_size=30, step=5)
@@ -39,7 +39,7 @@ def processTrain():
     raw_wifi.to_csv(f"{constants.data.train.RAW_OUT_PATH}/raw_radiomap.csv", index=False)
 
     '''
-    Obtenemos wifi escalando los datos a 0 - 1
+    Obtain wifi scaling the data to 0 - 1
     '''
 
     proc_wifi = scale_wifi(wifi_corrected)

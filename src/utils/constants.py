@@ -1,17 +1,17 @@
 class Train:
     """
-    Clase que contiene las constantes de los directorios del proyecto
+    Class that contains the constants for the project directories.
 
     Attributes:
     ___________
         INITIAL_DATA: str
-            La dirección de los datos en bruto (formato .txt)
+            The directory for raw data (in .txt format).
         CHECKPOINT_DATA_PATH: str
-            La dirección de los datos del checkpoint de cada métrica y wifi
+            The directory for checkpoint data for each metric and WiFi.
         MID_PATH: str
-            La dirección de salida de cada dataset (metricas y wifi)
+            The output directory for each dataset (metrics and WiFi).
         FINAL_PATH: str
-            Datos unidos
+            Merged data.
     """
     # Definición de las constantes
     INITIAL_DATA = "data/train/initial_rp_data"  # La dirección de los datos extendida
@@ -28,19 +28,20 @@ class Partitions:
 
 class Test:
     """
-    Clase que contiene las constantes de los directorios del proyecto
+    Class that contains the constants for the project directories.
 
     Attributes:
     ___________
         INITIAL_DATA: str
-            La dirección de los datos en bruto (formato .txt)
+            The directory for raw data (in .txt format).
         CHECKPOINT_DATA_PATH: str
-            La dirección de los datos del checkpoint de cada métrica y wifi
+            The directory for checkpoint data for each metric and WiFi.
         MID_PATH: str
-            La dirección de salida de cada dataset (metricas y wifi)
+            The output directory for each dataset (metrics and WiFi).
         FINAL_PATH: str
-            Datos unidos
+            Merged data.
     """
+
     # Definición de las constantes
     INITIAL_DATA = "data/test/initial_rp_data"  # La dirección de los datos extendida
     CHECKPOINT_DATA_PATH = "data/test/checkpoint_groundtruth"
@@ -50,15 +51,16 @@ class Test:
 
 class Directories:
     """
-    Clase que contiene las constantes de los directorios del proyecto
+    Class that contains the constants for the project directories.
 
     Attributes:
     ___________
         train: Train
-            Clase que contiene las constantes de los directorios de los datos de entrenamiento
+            Class containing constants for training data directories.
         test: Test
-            Clase que contiene las constantes de los directorios de los datos de testeo
+            Class containing constants for testing data directories.
     """
+
     train = Train()
     test = Test()
     partitions = Partitions()
@@ -66,15 +68,16 @@ class Directories:
 
 class Positioning:
     """
-    Clase que contiene las constantes de los outputs de posicionamiento del proyecto
+    Class that contains the constants for the positioning outputs of the project.
 
     Attributes:
     ___________
         POSITIONING: str
-            La dirección de los modelos de posicionamiento
+            The directory for positioning models.
         POSITIONING_ESTIMATION: str
-            La dirección de los modelos de estimación de posicionamiento
+            The directory for positioning estimation models.
     """
+
     positioning_path = "outputs/positioning"
     without_rpmap = f"{positioning_path}/without_rpmap"
     rpmap = f"{positioning_path}/rpmap"
@@ -83,8 +86,9 @@ class Positioning:
 
 class Architectures:
     """
-    Clase que contiene las constantes de los directorios de las arquitecturas de los modelos
+    Class that contains the constants for the directories of the model architectures.
     """
+
     arquitectures = "outputs/model_architecture"
     cgan_300 = f"{arquitectures}/cGAN_300_300"
     cgan_28 = f"{arquitectures}/cGAN_28_28"
@@ -92,8 +96,9 @@ class Architectures:
 
 class Models:
     """
-    Clase que contiene las constantes de los directorios de los modelos del proyecto
+    Class that contains the constants for the directories of the models in the project.
     """
+
     training = "outputs/process_training"
     cgan_300 = "outputs/process_training/cGAN_300_300"
     cgan_28 = "outputs/process_training/cGAN_28_28"
@@ -110,15 +115,16 @@ class RPMAP:
 
 class Outputs:
     """
-    Clase que contiene las constantes de los directorios de los outputs del proyecto
+    Class that contains the constants for the directories of the project outputs.
 
     Attributes:
     ___________
         PATH_OUTPUTS: str
-            La dirección raíz de los outputs
+            The root directory for the outputs.
         PATH_RPMAP: str
-            La dirección de los mapas de referencia continua
+            The directory for continuous reference maps.
     """
+
     PATH_OUTPUTS = "outputs"
     GENERATIVE_METRICS = "outputs/generative_metrics"
     models = Models()
@@ -129,30 +135,30 @@ class Outputs:
 
 class constants:
     """
-    Clase que contiene las constantes del proyecto
+    Class that contains the constants for the project.
 
     Attributes:
     ___________
         dictionary_decoding: dict
-            Diccionario que transforma el label a (longitud, latitud) en metros
+            Dictionary that transforms the label to (longitude, latitude) in meters.
         data: Directories
-            Clase que contiene las constantes de los directorios del proyecto
+            Class containing constants for the project directories.
         aps: list
-            Lista de APs (wifi) a considerar para la generación del mapa de referencia continua
+            List of APs (Wi-Fi) to consider for the generation of the continuous reference map.
         magnetometer_cols: list
-            Lista de columnas del magnetómetro
+            List of magnetometer columns.
         accelerometer_cols: list
-            Lista de columnas del acelerómetro
+            List of accelerometer columns.
         gyroscope_cols: list
-            Lista de columnas del giroscopio
+            List of gyroscope columns.
         labels_dictionary_meters: dict
-            Diccionario que transforma el label a (longitud, latitud) en metros
+            Dictionary that transforms the label to (longitude, latitude) in meters.
         outputs: Outputs
-            Clase que contiene las constantes de los directorios de todas las salidas del proyecto
+            Class containing constants for the directories of all project outputs.
     """
 
-    T_MAX_SAMPLING = 1140  # Número de segundos máximo de recogida de muestras por cada Reference Point en TRAIN
-    T_MAX_SAMPLING_TEST = 60  # Número de segundos máximo de recogida de muestras por cada Reference Point en TEST
+    T_MAX_SAMPLING = 1140  # Maximum number of seconds for sample collection per Reference Point in TRAIN
+    T_MAX_SAMPLING_TEST = 60  # Maximum number of seconds for sample collection per Reference Point in TEST
 
     dictionary_decoding = {
         0: "GEOTECWIFI03", 1: "480Invitados",
@@ -166,7 +172,7 @@ class constants:
     colors_test = ["red", "blue", "green", "yellow", "purple", "black", "pink", "brown", "orange", "gray", "cyan",
                    "magenta", "lime", "olive", "teal", "navy", "maroon"]
 
-    # Diccionario que transforma el label a (longitud, latitud) en metros TRAIN
+    # Dictionary that transforms the label to (longitude, latitude) in meters TRAIN
     labels_dictionary_meters = {
         0: (0.6, 0), 1: (5.4, 0), 2: (9, 0),
         3: (9, 3), 4: (6, 3), 5: (3, 3),
@@ -178,7 +184,7 @@ class constants:
         21: (3, 14.4), 22: (0, 14.4)
     }
 
-    # Diccionario que transforma el label a (longitud, latitud) en metros TEST
+    # Dictionary that transforms the label to (longitude, latitude) in meters TEST
     labels_dictionary_meters_test = {
         0: (3.6, 0), 1: (7.2, 0), 2: (9, 1.2),
         3: (7.2, 3), 4: (4.2, 3), 5: (1.8, 3),

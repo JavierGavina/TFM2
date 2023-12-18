@@ -81,10 +81,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=1)", "Partition": "5vs18", "Label": label,
                                                             "Mean Euclid": mean_euclid,
                                                             "Std Euclid": std_euclid}, index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=1)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -96,10 +92,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=1)", "Partition": "10vs13", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=1)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -111,10 +103,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=1)", "Partition": "15vs8", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=1)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_5vs18, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -126,10 +114,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=5)", "Partition": "5vs18", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=5)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -141,10 +125,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=5)", "Partition": "10vs13", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=5)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -156,10 +136,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "KNN(k=5)", "Partition": "15vs8", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "KNN(k=5)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_5vs18, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -171,10 +147,6 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "RF", "Partition": "5vs18", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "RF", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -187,11 +159,6 @@ def getPositioningWithPartitions():
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
 
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "RF", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
-
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
         idxs_coord = np.where(ytest_15vs8 == pos)[0]
@@ -202,19 +169,15 @@ def getPositioningWithPartitions():
                                               pd.DataFrame({"Model": "RF", "Partition": "15vs8", "Label": label,
                                                             "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
                                                            index=[idx])])
-        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-        #     {"Model": "RF", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-        #      "Std Euclid": std_euclid},
-        #     ignore_index=True)
 
     tabla_metricas = tabla_metricas_per_coord.groupby(["Model", "Partition"]) \
         .mean(numeric_only=True)[["Mean Euclid", "Std Euclid"]] \
         .reset_index()
-    tabla_metricas.to_csv(f"{path_partitions_output}/tablas/tabla_metricas.csv", index=False)
+    tabla_metricas.to_csv(f"{path_partitions_output}/tables/metrics.csv", index=False)
 
-    os.makedirs(f"{path_partitions_output}/tablas", exist_ok=True)
+    os.makedirs(f"{path_partitions_output}/tables", exist_ok=True)
     os.makedirs(f"{path_partitions_output}/plots", exist_ok=True)
-    tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tablas/tabla_metricas_per_coord.csv", index=False)
+    tabla_metricas_per_coord.to_csv(f"{path_partitions_output}/tables/metrics_per_coord.csv", index=False)
 
     aux = tabla_metricas_per_coord.copy()
     y_max = np.ceil(np.max(aux["Mean Euclid"] + aux["Std Euclid"])) + 0.5
@@ -224,28 +187,27 @@ def getPositioningWithPartitions():
     for idx, partition in enumerate(aux.Partition.unique()):
         aux_partition = aux[aux.Partition == partition]
         plt.subplot(3, 1, idx + 1)
-        plt.title(f"Partición: {partition} ")
+        plt.title(f"Partition: {partition} ")
         for idx_model, model in enumerate(aux_partition.Model.unique()):
             aux_model = aux_partition[aux_partition.Model == model].sort_values(by=["Mean Euclid"])
             xaxis = [x for x in range(1, aux_model.shape[0] + 1)]
             plt.plot(xaxis, aux_model["Mean Euclid"], label=model, c=colores[idx_model])
             plt.errorbar(xaxis, aux_model["Mean Euclid"], yerr=aux_model["Std Euclid"],
                          fmt='o', c=colores[idx_model], capsize=5)
-            plt.xticks(xaxis, xaxis)
+            plt.xticks([])
         plt.ylim(y_min, y_max)
         plt.ylabel("Error (m)")
         plt.xlabel("Ordered Points (by error)")
         plt.legend()
     plt.tight_layout()
-    plt.savefig(f"{path_partitions_output}/plots/errorbar metrics.png")
+    plt.savefig(f"{path_partitions_output}/plots/errorbar_metrics.png")
     plt.show()
 
     aux = tabla_metricas.sort_values(by=["Mean Euclid"])
     aux["Model_Partition"] = aux["Model"] + "-" + aux["Partition"]
     f = lambda x: "orange" if "KNN(k=1)" in x else "green" if "KNN(k=5)" in x else "purple"
-    # obtener un array de colores usando map
+    # obtain an array of colors for each bar
     colores = list(map(f, aux["Model_Partition"]))
-    labels = list(map(lambda x: x.split("-")[0], aux["Model_Partition"]))
     plt.figure(figsize=(10, 5))
     plt.title("Barplot error per each model-partition")
     plt.bar(aux["Model_Partition"], aux["Mean Euclid"], color=colores)

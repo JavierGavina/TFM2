@@ -1,6 +1,3 @@
-import subprocess
-import os
-
 from src.process_train import processTrain
 from src.process_test import processTest
 from src.process_partitions import processPartitions

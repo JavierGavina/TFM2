@@ -6,27 +6,26 @@ import sys
 
 sys.path.append("../../")
 
-from utils.constants import constants
-from utils.preprocess import interpolacion_pixel_proximo, parse_windows
+from src.utils.constants import constants
+from src.utils.preprocess import proximity_pixel_interpolation, parse_windows
 
 warnings.filterwarnings('ignore')
 
 
 def preprocessGrid(grid_z0: np.ndarray) -> np.ndarray:
     """
-    Esta función devuelve una matriz con los valores interpolados del RSS para toda latitud y longitud.
-    Los valores interpolados se realizan dentro del espacio de muestreo comprendido entre (minLongitud, minLatitud) y (maxLongitud, maxLatitud). Por lo que todo punto de muestreo fuera de este espacio es fijado a np.nan por defecto.
+    This function returns a matrix with interpolated RSS values for the entire latitude and longitude.
+    The interpolated values are performed within the sampling space between (minLongitude, minLatitude) and (maxLongitude, maxLatitude). So, any sampling point outside this space is set to np.nan by default.
 
-
-    Esta función se encarga de rellenar los valores NaN con una Interpolación lineal unidimensional para puntos de muestra monotónicamente crecientes
+    This function fills NaN values with one-dimensional linear interpolation for monotonically increasing sample points.
 
     Parameters:
     -----------
-    grid_z0: matriz con los valores interpolados del RSS para toda latitud y longitud
+    grid_z0: matrix with interpolated RSS values for the entire latitude and longitude
 
     Returns:
     --------
-    grid_z0: matriz con los valores interpolados del RSS para toda latitud y longitud
+    grid_z0: matrix with interpolated RSS values for the entire latitude and longitude
 
     Examples:
     ---------
@@ -43,20 +42,20 @@ def preprocessGrid(grid_z0: np.ndarray) -> np.ndarray:
     grid_z0 = grid_z0.ravel()
     nx = ny = np.int(np.sqrt(grid_z0.shape[0]))
 
-    # Los valores por encima de 1 y por debajo de 0 carecen de sentido, se fijan a 1 y 0 respectivamente
+    # Values above 1 and below 0 are meaningless, set to 1 and 0 respectively
     grid_z0[grid_z0 < 0] = 0
     grid_z0[grid_z0 > 1] = 1
 
-    # Encontrar los índices de los valores conocidos
+    # Find the indices of known values
     known_indexes = np.where(~np.isnan(grid_z0))[0]
 
-    # Encontrar los índices de los valores que desea interpolar
+    # Find the indices of values to interpolate
     interp_indexes = np.where(np.isnan(grid_z0))[0]
 
-    # Interpolar los valores NaN con otros valores
+    # Interpolate NaN values with other values
     interp_values = np.interp(interp_indexes, known_indexes, grid_z0[known_indexes])
 
-    # Reemplazar los valores NaN por los valores interpolados
+    # Replace NaN values with interpolated values
     grid_z0[np.isnan(grid_z0)] = interp_values
 
     return grid_z0.reshape((nx, ny))
@@ -66,49 +65,49 @@ def referencePointMap(dataframe: pd.DataFrame, aps_list: list, batch_size: int =
                       size_reference_point_map: int = 300,
                       return_axis_coords: bool = False):
     """
-    Esta función devuelve una matriz con los valores interpolados del RSS de cada AP (wifi) para toda latitud y longitud en el espacio de muestreo.
+    This function returns a matrix with interpolated RSS values for each AP (WiFi) for the entire latitude and longitude in the sampling space.
 
     Parameters:
     -----------
     dataframe: pd.DataFrame
-        DataFrame con los valores de RSS de cada AP (wifi) para cada latitud y longitud anotada en un Reference Point (RP)
+        DataFrame with the RSS values for each AP (WiFi) for each latitude and longitude annotated in a Reference Point (RP)
 
     aps_list: list
-        Lista de APs (wifi) a considerar para la generación del mapa de referencia continua
+        List of APs (WiFi) to consider for generating the continuous reference map
 
     batch_size: int = 30
-        Tamaño de la ventana de tiempo para la generación de cada mapa de referencia continua (número de segundos a considerar para calcular la media de RSS en cada RP)
+        Time window size for generating each continuous reference map (number of seconds to consider for calculating the mean RSS at each RP)
 
     step_size: int = 5
-        Número de segundos que se desplaza la ventana de tiempo para la generación de cada mapa de referencia continua. Si no queremos overlapping (entrecruzamiento de ventanas), tenemos que asignar el mismo valor que batch_size
+        Number of seconds the time window shifts for generating each continuous reference map. If no overlapping is desired, assign the same value as batch_size
 
     size_reference_point_map: int
-        Tamaño del mapa de referencia continua (número de RPs muestreadas en cada dimensión)
+        Size of the continuous reference map (number of RPs sampled in each dimension)
 
     return_axis_coords: bool
-        Si es True, devuelve las coordenadas x e y del mapa de referencia continua. Si es False, devuelve únicamente el mapa de referencia continua y las etiquetas de los APs (wifi)
+        If True, returns the continuous longitude and latitude coordinates of the reference map. If False, returns only the continuous reference map and the labels of the APs (WiFi)
 
     Returns:
     --------
     reference_point_map: np.ndarray
-        Matriz con los valores interpolados del RSS de cada AP (wifi) para toda latitud y longitud en el espacio de muestreo
+        Matrix with interpolated RSS values for each AP (WiFi) for the entire latitude and longitude in the sampling space
 
     APLabel: np.ndarray
-        Etiquetas de los APs (wifi) para cada mapa de referencia continua
+        Labels of the APs (WiFi) for each continuous reference map
 
     -----------------------------------------
-    En caso en que return_axis_coords sea True:
+    In case return_axis_coords is True:
     -----------------------------------------
     x_g: np.ndarray
-        Coordenadas longitud continuas del mapa de referencia continua
+        Continuous longitude coordinates of the continuous reference map
 
     y_g: np.ndarray
-        Coordenadas latitud continuas del mapa de referencia continua
+        Continuous latitude coordinates of the continuous reference map
 
     Examples:
     ---------
 
-    Lectura de datos
+    Data reading
 
     >>> dataframe = pd.DataFrame({
             "AppTimestamp(s)": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -118,15 +117,14 @@ def referencePointMap(dataframe: pd.DataFrame, aps_list: list, batch_size: int =
             "eduroam": [1, 0.9, 1, 0.9, 0.8, 0.2, 0.1, 0.2, 0, 0],
         })
 
-    Lista de aps
+    List of APs
 
     >>> aps_list = ["GEOTECWIFI03", "eduroam"]
 
-    Generación de mapa de referencia continua
+    Generating continuous reference map
 
     >>> reference_point_map, APLabel = referencePointMap(dataframe, aps_list=aps_list, batch_size=5, step_size=2, size_reference_point_map=2)
     """
-
     nx = ny = size_reference_point_map
     t_max = dataframe["AppTimestamp(s)"].max()
     samples_per_RP = int((t_max - batch_size) / step_size) + 1
@@ -141,11 +139,11 @@ def referencePointMap(dataframe: pd.DataFrame, aps_list: list, batch_size: int =
             aux = aux.groupby(["Longitude", "Latitude"]).mean()[ap].reset_index()
             miny, maxy = min(aux['Latitude']), max(aux['Latitude'])
             minx, maxx = min(aux['Longitude']), max(aux['Longitude'])
-            grdi_x = np.linspace(minx, maxx, num=nx, endpoint=False)  # Coordenadas x discretas
-            grdi_y = np.linspace(miny, maxy, num=ny, endpoint=False)  # Coordenadas y discretas
-            yg, xg = np.meshgrid(grdi_y, grdi_x, indexing='ij')  # Coordenadas x e y continuas
-            x_g = xg.ravel()  # Coordenadas x continuas
-            y_g = yg.ravel()  # Coordenadas y continuas
+            grdi_x = np.linspace(minx, maxx, num=nx, endpoint=False)  # Discrete x coordinates
+            grdi_y = np.linspace(miny, maxy, num=ny, endpoint=False)  # Discrete y coordinates
+            yg, xg = np.meshgrid(grdi_y, grdi_x, indexing='ij')  # Continuous x and y coordinates
+            x_g = xg.ravel()  # Flattened continuous x coordinates
+            y_g = yg.ravel()  # Flattened continuous y coordinates
             aux2 = aux.drop([ap], 1)
             points = np.array(aux2)
             values = np.array(aux[ap])
@@ -163,17 +161,17 @@ def referencePointMap(dataframe: pd.DataFrame, aps_list: list, batch_size: int =
 
 def labelEncoding(labels: np.ndarray) -> np.ndarray:
     """
-    Esta función devuelve un array con los valores de las etiquetas codificadas en números enteros.
+    This function returns an array with the values of the labels encoded as integers.
 
     Parameters:
     -----------
     labels: np.ndarray
-        Array con los valores de las etiquetas a codificar
+        Array with the values of the labels to encode
 
     Returns:
     --------
         numericLabels: np.ndarray
-            Array con los valores de las etiquetas codificadas en números enteros
+            Array with the values of the labels encoded as integers
 
     Examples:
     ---------
@@ -197,17 +195,17 @@ def labelEncoding(labels: np.ndarray) -> np.ndarray:
 
 def labelDecoding(labels: np.ndarray) -> np.ndarray:
     """
-    Esta función devuelve un array con los valores de las etiquetas decodificadas en strings.
+    This function returns an array with the values of the labels decoded into strings.
 
     Parameters:
     -----------
     labels: np.ndarray
-        Array con los valores de las etiquetas a decodificar
+        Array with the values of the labels to decode
 
     Returns:
     --------
     categoricLabels: np.ndarray
-        Array con los valores de las etiquetas decodificadas en strings
+        Array with the values of the labels decoded into strings
 
     Examples:
     ---------
@@ -229,27 +227,27 @@ def labelDecoding(labels: np.ndarray) -> np.ndarray:
 
 def get_radiomap_from_rpmap(rpmap, x_coords, y_coords):
     """
-    Esta función coge los datos en mapa de referencia continuo y los transforma a radiomap.
+    This function takes data from the continuous reference point map and transforms it into a radiomap.
 
     Parameters:
     -----------
     rpmap: np.ndarray
-        Matriz con los valores del RSS de cada AP (wifi) para toda latitud y longitud en el espacio de muestreo
+        Matrix with the RSS values of each AP (Wi-Fi) for every latitude and longitude in the sampling space
 
     x_coords: np.ndarray
-        Coordenadas longitud continuas del mapa de referencia continua
+        Continuous longitude coordinates of the continuous reference point map
 
     y_coords: np.ndarray
-        Coordenadas latitud continuas del mapa de referencia continua
+        Continuous latitude coordinates of the continuous reference point map
 
     Returns:
     --------
     radiomap_extended: pd.DataFrame
-        DataFrame con los valores del RSS de cada AP (wifi) para cada coordenada x e y en el espacio de muestreo
+        DataFrame with the RSS values of each AP (Wi-Fi) for each x and y coordinate in the sampling space
 
     Examples:
     ---------
-    Obtención del rpmap y coordenadas
+    Obtaining the rpmap and coordinates
 
     >>> dataloader = DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
                                 aps_list=constants.aps, batch_size=30, step_size=5,
@@ -259,60 +257,63 @@ def get_radiomap_from_rpmap(rpmap, x_coords, y_coords):
 
     >>> rpmap = X[:,:,:,0]
 
-    Obtenemos el radiomap utilizando el mapa de referencia de mallado continuo y las coordenadas de muestreo
+    Getting the radiomap using the continuous mesh reference map and the sampling coordinates
 
     >>> radiomap = get_radiomap_from_rpmap(rpmap, x_coords, y_coords)
     """
-    # contantes para la operación de transformación a radiomap
-    samples_per_RP = int(rpmap.shape[0]/len(constants.aps)) # 223 instancias temporales por cada ap
-    size_map = rpmap.shape[1] # 28x28 puntos de referencia
-    radiomap = np.zeros((samples_per_RP*size_map*size_map, len(constants.aps)+2)) # 174832 filas, 7 columnas wifi + 2 columnas coordenadas
-    count = 0 # inicializamos el contador de filas
-    rpmap_flatten = rpmap.reshape(int(rpmap.shape[0]), size_map*size_map) # aplanamos cada mapa de referencia
+    # Constants for the radiomap transformation operation
+    samples_per_RP = int(rpmap.shape[0] / len(constants.aps))  # 223 temporal instances per ap
+    size_map = rpmap.shape[1]  # 28x28 reference points
+    radiomap = np.zeros((samples_per_RP * size_map * size_map,
+                         len(constants.aps) + 2))  # 174832 rows, 7 columns Wi-Fi + 2 columns coordinates
+    count = 0  # initialize the row counter
+    rpmap_flatten = rpmap.reshape(int(rpmap.shape[0]), size_map * size_map)  # flatten each reference map
 
-    for batch in range(samples_per_RP): # para cada instancia temporal
-        for idx_coord, (x, y) in enumerate(zip(x_coords, y_coords)): # para cada coordenada
-            for n_ap in range(len(constants.aps)): # para cada ap
-                radiomap[count, n_ap] = rpmap_flatten[batch+n_ap*samples_per_RP, idx_coord] # guardamos el valor de la señal wifi en la fila correspondiente
-            radiomap[count, len(constants.aps)] = x # guardamos la coordenada x
-            radiomap[count, len(constants.aps)+1] = y # guardamos la coordenada y
-            count += 1 # incrementamos el contador de filas
+    for batch in range(samples_per_RP):  # for each temporal instance
+        for idx_coord, (x, y) in enumerate(zip(x_coords, y_coords)):  # for each coordinate
+            for n_ap in range(len(constants.aps)):  # for each ap
+                radiomap[count, n_ap] = rpmap_flatten[
+                    batch + n_ap * samples_per_RP, idx_coord]  # save the Wi-Fi signal value in the corresponding row
+            radiomap[count, len(constants.aps)] = x  # save the x coordinate
+            radiomap[count, len(constants.aps) + 1] = y  # save the y coordinate
+            count += 1  # increment the row counter
 
-    radiomap_extended = pd.DataFrame(radiomap, columns=constants.aps+["Longitude", "Latitude"]) # convertimos a dataframe
+    radiomap_extended = pd.DataFrame(radiomap,
+                                     columns=constants.aps + ["Longitude", "Latitude"])  # convert to a dataframe
     return radiomap_extended
 
 
 class DataLoader:
     """
-    Esta clase se encarga de cargar los datos de los mapas de referencia continua para cada AP (wifi) y sus etiquetas.
+    This class is responsible for loading data from continuous reference point maps for each AP (Wi-Fi) and their labels.
 
     Attributes:
     -----------
     data_dir: str
-        Ruta del archivo csv con los datos de los mapas de referencia continua para cada AP (wifi) y sus etiquetas
+        Path to the csv file with data from continuous reference point maps for each AP (Wi-Fi) and their labels
     aps_list: list
-        Lista de APs (wifi) a considerar para la generación del mapa de referencia continua
+        List of APs (Wi-Fi) to consider for generating the continuous reference point map
     batch_size: int = 30
-        Tamaño de la ventana de tiempo para la generación de cada mapa de referencia continua (número de segundos a considerar para calcular la media de RSS en cada RP)
+        Size of the time window for generating each continuous reference point map (number of seconds to consider for calculating the mean RSS at each RP)
     step_size: int = 5
-        Número de segundos que se desplaza la ventana de tiempo para la generación de cada mapa de referencia continua. Si no queremos overlapping (entrecruzamiento de ventanas), tenemos que asignar el mismo valor que batch_size
+        Number of seconds the time window shifts for generating each continuous reference point map. If we don't want overlapping windows, we have to assign the same value as batch_size
     size_reference_point_map: int = 300
-        Tamaño del mapa de referencia continua (número de RPs muestreadas en cada dimensión)
+        Size of the continuous reference point map (number of RPs sampled in each dimension)
     return_axis_coords: bool = False
-        Si es True, devuelve las coordenadas x e y del mapa de referencia continua. Si es False, devuelve únicamente el mapa de referencia continua y las etiquetas de los APs (wifi)
+        If True, returns the x and y coordinates of the continuous reference point map. If False, returns only the continuous reference point map and the labels of the APs (Wi-Fi)
 
     Methods:
     --------
     __getData(data_dir: str) -> pd.DataFrame:
-        Esta función devuelve un DataFrame con los datos de los mapas de referencia continua para cada AP (wifi) y sus etiquetas
+        This function returns a DataFrame with the data from continuous reference point maps for each AP (Wi-Fi) and their labels
 
     __call__(*args, **kwargs) -> np.ndarray:
-        Esta función devuelve los mapas de referencia continua para cada AP (wifi) y sus etiquetas
+        This function returns the continuous reference point maps for each AP (Wi-Fi) and their labels
 
     Examples:
     ---------
 
-    Con overlapping
+    With overlapping
 
     >>> dataloader = DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
                                 aps_list=constants.aps, batch_size=30, step_size=5,
@@ -321,7 +322,7 @@ class DataLoader:
 
     >>> X, y, _ = dataloader()
 
-    Sin overlapping
+    Without overlapping
 
     >>> dataloader = DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
                                 aps_list=constants.aps, batch_size=30, step_size=30,
@@ -330,7 +331,7 @@ class DataLoader:
 
     >>> X, y, _ = dataloader()
 
-    Devolver coordenadas x e y
+    Return x and y coordinates
 
     >>> dataloader = DataLoader(data_dir=f"{constants.data.FINAL_PATH}/groundtruth.csv",
                                 aps_list=constants.aps, batch_size=30, step_size=5,
@@ -338,8 +339,8 @@ class DataLoader:
                                 return_axis_coords=True)
 
     >>> X, y, [x_coords, y_coords] = dataloader()
-
     """
+
     def __init__(self, data_dir: str, aps_list: list, batch_size: int = 30, step_size: int = 5,
                  size_reference_point_map: int = 300,
                  return_axis_coords: bool = False):
@@ -357,8 +358,8 @@ class DataLoader:
                       constants.gyroscope_cols + constants.magnetometer_cols + ["Latitude", "Longitude", "Label"]
 
         groundtruth = groundtruth[new_columns]
-        print("Interpolando datos con píxel más próximo si son coincidentes")
-        groundtruth_interpolated = interpolacion_pixel_proximo(groundtruth, threshold=30)
+        print("Interpolating data with nearest pixel if they match")
+        groundtruth_interpolated = proximity_pixel_interpolation(groundtruth, threshold=30)
         return groundtruth_interpolated
 
     def __call__(self, *args, **kwargs):

@@ -11,23 +11,23 @@ from src.utils.constants import constants
 
 def parse_windows(n_max: int, window_size: int, step: int):
     """
-    Esta función devuelve una lista de ventanas de tamaño window_size y step step.
+    This function returns a list of windows of size 'window_size' with a step size of 'step'.
 
     Parameters:
     -----------
     n_max: int
-        número máximo a generar en la lista de ventanas
+        Maximum number to generate in the window list.
 
     window_size: int
-        tamaño de la ventana
+        Size of the window.
 
     step: int
-        tamaño del paso
+        Step size.
 
     Returns:
     --------
     list
-        Lista de ventanas (tuplas) con índices (start, end) de cada ventana generada en base a la longitud de la serie temporal, el tamaño de la ventana y el tamaño del paso
+        List of windows (tuples) with indices (start, end) for each window generated based on the length of the time series, window size, and step size.
 
     Examples:
     ---------
@@ -36,12 +36,34 @@ def parse_windows(n_max: int, window_size: int, step: int):
 
     >>> parse_windows(n_max=30, window_size=10, step=5)
     >>> [(0, 10), (5, 15), (10, 20), (15, 25), (20, 30)]
-
     """
     return [(i, min(i + window_size, n_max)) for i in range(0, n_max, step) if i + window_size <= n_max]
 
 
 def get_checkpoints_data(dir_data: str, dict_labels) -> pd.DataFrame:
+    """
+    Extracts and organizes checkpoint data from labeled sources and saves it in a structured format.
+
+    Parameters:
+    -----------
+    dir_data: str
+        The directory path where the labeled data is stored.
+
+    dict_labels: dict
+        A dictionary containing labels and corresponding positions.
+
+    Returns:
+    --------
+    None
+        Saves a Pandas DataFrame containing organized checkpoint data with columns: 'AppTimestamp(s)', 'Name_SSID',
+        'MAC_BSSID', 'RSS', 'Label', 'Latitude', and 'Longitude'.
+
+    Example:
+    --------
+    >>> dir_data = '/path/to/data'
+    >>> dict_labels = {'label1': (lat1, lon1), 'label2': (lat2, lon2), ...}
+    >>> get_checkpoints_data(dir_data, dict_labels)
+    """
     out_dir = "/".join(dir_data.split("/")[:-1])
     CHECKPOINT_DATA_PATH = f"{out_dir}/checkpoint_groundtruth"
     WIFI_CHECKPOINT = f"{CHECKPOINT_DATA_PATH}/Wifi"
@@ -142,6 +164,27 @@ def correctWifiFP(wifi_data: pd.DataFrame, t_max_sampling: int, dict_labels_to_m
 
 
 def fix_na_wifi(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fixes missing values (NaN) in WiFi data by replacing them with a global minimum value minus one.
+
+    Parameters:
+    -----------
+    data: pd.DataFrame
+        The input DataFrame containing Wi-Fi data with potential missing values.
+
+    Returns:
+    --------
+    pd.DataFrame
+        A new DataFrame with missing values in Wi-Fi data replaced by a global minimum value.
+
+    Example:
+    --------
+    >>> import pandas as pd
+    >>> from src.utils.preprocess import fix_na_wifi
+    >>> wifi_data = pd.read_csv('wifi_data.csv')  # Replace with your actual file path
+    >>> cleaned_data = fix_na_wifi(wifi_data)
+    """
+
     aux = data.copy()
     min_global = aux[constants.aps].min().min() - 1
     aux[constants.aps] = aux[constants.aps].fillna(min_global)
@@ -149,6 +192,26 @@ def fix_na_wifi(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def scale_wifi(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Scales the Wi-Fi data within the DataFrame to a normalized range [0, 1].
+
+    Parameters:
+    -----------
+    data: pd.DataFrame
+        The input DataFrame containing Wi-Fi data to be scaled.
+
+    Returns:
+    --------
+    pd.DataFrame
+        A new DataFrame with Wi-Fi data scaled to a normalized range.
+
+    Example:
+    --------
+    >>> import pandas as pd
+    >>> from src.utils.preprocess import scale_wifi
+    >>> wifi_data = pd.read_csv('wifi_data.csv')  # Replace with your actual file path
+    >>> scaled_data = scale_wifi(wifi_data)
+    """
     aux = data.copy()
     aux[constants.aps] -= aux[constants.aps].min().min() - 1
     aux[constants.aps] /= aux[constants.aps].max().max()
@@ -157,66 +220,70 @@ def scale_wifi(data: pd.DataFrame) -> pd.DataFrame:
 
 def rolling_mean(data: pd.DataFrame, window_size: int, step: int) -> pd.DataFrame:
     """
-    Aplica una media móvil a los datos de WiFi, de forma que si hay un hueco en el timestamp, se rellena con el valor anterior si y solo si el valor anterior y posterior son iguales
-    Parameters
-    ----------
-    data: pd.DataFrame
-        pd.DataFrame de los datos correspondientes al WiFi
-    window_size: int
-        Tamaño de la ventana
-    step: int
-        Tamaño del paso de la ventana
-
-    Returns
-    -------
-    rolled_data: pd.DataFrame
-        pd.DataFrame de los datos con la media aplicada
-
-    """
-    n_max = data["AppTimestamp(s)"].max()
-    combinaciones = parse_windows(n_max=n_max, window_size=window_size,
-                                  step=step)  # Combinaciones de ventanas
-    data_columns = ["AppTimestamp(s)"] + constants.aps + ["Latitude", "Longitude", "Label"]  # Columnas de los datos
-    rolled_data = pd.DataFrame(columns=data_columns)  # Dataframe vacío
-    for lon, lat, lab in data[["Longitude", "Latitude", "Label"]].drop_duplicates().values:  # Recorremos cada coordenada única
-        query = data[(data["Longitude"] == lon) & (data["Latitude"] == lat)]  # Filtramos por coordenada
-        for start, end in combinaciones:  # Recorremos cada combinación de ventanas
-            aux = query[(query["AppTimestamp(s)"] >= start) & (query["AppTimestamp(s)"] < end)]  # Filtramos por ventana
-            mean_by_wifi_column = aux[constants.aps].mean(axis=0).tolist()  # Media por cada AP
-            row = [end] + mean_by_wifi_column + [lat, lon]  # Fila a añadir
-            row.append(lab)  # Añadimos el label
-            rolled_data.loc[len(rolled_data)] = row  # Añadimos la fila
-
-    return rolled_data
-
-
-def interpolacion_pixel_proximo(data: pd.DataFrame, threshold: int) -> pd.DataFrame:
-    """
-    Aplica una interpolación a los datos de WiFi, de forma que si hay un hueco en el timestamp, se rellena con el valor anterior si y solo si el valor anterior y posterior son iguales
+    Applies a rolling mean to WiFi data, filling gaps in timestamps with the previous value only if the previous and subsequent values are equal.
 
     Parameters:
     -----------
     data: pd.DataFrame
-        pd.DataFrame de los datos correspondientes al WiFi
+        Dataframe containing Wi-Fi data.
+
+    window_size: int
+        Size of the rolling window.
+
+    step: int
+        Step size of the rolling window.
+
+    Returns:
+    --------
+    rolled_data: pd.DataFrame
+        DataFrame with the rolling mean applied to the Wi-Fi data.
+
+    """
+
+    n_max = data["AppTimestamp(s)"].max()
+    combinations = parse_windows(n_max=n_max, window_size=window_size,
+                                 step=step)  # Window combinations
+    data_columns = ["AppTimestamp(s)"] + constants.aps + ["Latitude", "Longitude", "Label"]  # Data columns
+    rolled_data = pd.DataFrame(columns=data_columns)  # Empty DataFrame
+    for lon, lat, lab in data[
+        ["Longitude", "Latitude", "Label"]].drop_duplicates().values:  # Iterate over each unique coordinate
+        query = data[(data["Longitude"] == lon) & (data["Latitude"] == lat)]  # Filter by coordinate
+        for start, end in combinations:  # Iterate over each window combination
+            aux = query[(query["AppTimestamp(s)"] >= start) & (query["AppTimestamp(s)"] < end)]  # Filter by window
+            mean_by_wifi_column = aux[constants.aps].mean(axis=0).tolist()  # Mean for each AP
+            row = [end] + mean_by_wifi_column + [lat, lon]  # Row to be added
+            row.append(lab)  # Add the label
+            rolled_data.loc[len(rolled_data)] = row  # Add the row
+
+    return rolled_data
+
+
+def proximity_pixel_interpolation(data: pd.DataFrame, threshold: int) -> pd.DataFrame:
+    """
+    Applies interpolation to WiFi data, filling gaps in timestamps with the previous value only if the previous and subsequent values are equal.
+
+    Parameters:
+    -----------
+    data: pd.DataFrame
+        DataFrame containing WiFi data.
 
     threshold: int
-        Número de segundos sin recogida de datos consecutivos para considerar si rechazar la interpolación
+        Number of consecutive seconds without data collection to consider rejecting interpolation.
 
     Returns:
     --------
     interpolated_data: pd.DataFrame
-        pd.DataFrame de los datos interpolados
+        DataFrame with interpolated data.
 
     Example:
     --------
-
-    Lectura del conjunto de datos
+    Read the dataset
 
     >>> data = pd.read_csv(f"{constants.data.train.FINAL_PATH}/groundtruth.csv")
 
-    Aplicación de la interpolación
+    Apply interpolation
 
-    >>> interpolated_data = interpolacion_pixel_proximo(data, threshold=30)
+    >>> interpolated_data = proximity_pixel_interpolation(data, threshold=30)
     """
     n_timestamp = data["AppTimestamp(s)"].max()
     coords_unique = data.drop_duplicates(["Longitude", "Latitude"])[["Longitude", "Latitude"]].reset_index()
@@ -250,7 +317,7 @@ def interpolacion_pixel_proximo(data: pd.DataFrame, threshold: int) -> pd.DataFr
                         if left_values[idx_max_left] == right_values[idx_min_right]:
                             query.at[t, ap] = left_values[idx_max_left]
 
-        # interpolated_data = interpolated_data.append(query) bug compatibilidad pandas
+        # interpolated_data = interpolated_data.append(query) bug compatiblity pandas
         interpolated_data = pd.concat([interpolated_data, query])
 
     return interpolated_data
@@ -258,49 +325,49 @@ def interpolacion_pixel_proximo(data: pd.DataFrame, threshold: int) -> pd.DataFr
 
 def read_checkpoint(checkpoint_path: str, labels: list) -> pd.DataFrame:
     """
-    Lee los datos de un checkpoint y los concatena en un único dataframe
+    Reads data from a checkpoint and concatenates it into a single DataFrame.
 
     Parameters:
     -----------
     checkpoint_path: str
-        Path del checkpoint
+        Path to the checkpoint.
 
     Returns:
     --------
     df: pd.DataFrame
-        pd.DataFrame con los datos concatenados
+        DataFrame with concatenated data.
 
     Example:
     --------
-    Ruta al checkpoint del acelerómetro:
+    Path to the accelerometer checkpoint:
 
     >>> CHECKPOINT_ACCELEROMETER_PATH = "data/train/checkpoint_groundtruth/Accelerometer"
 
-    Ruta al checkpoint del giroscopio:
+    Path to the gyroscope checkpoint:
 
     >>> CHECKPOINT_GYROSCOPE_PATH = "data/train/checkpoint_groundtruth/Gyroscope"
 
-    Ruta al checkpoint del magnetómetro:
+    Path to the magnetometer checkpoint:
 
     >>> CHECKPOINT_MAGNETOMETER_PATH = "data/train/checkpoint_groundtruth/Magnetometer"
 
-    Ruta al checkpoint del WiFi:
+    Path to the Wi-Fi checkpoint:
 
     >>> CHECKPOINT_WIFI_PATH = "data/train/checkpoint_groundtruth/Wifi"
 
-    Lectura de los datos del acelerómetro:
+    Reading accelerometer data:
 
-    >>> accelerometer = read_checkpoint(CHECKPOINT_DATA_PATH)
+    >>> accelerometer = read_checkpoint(CHECKPOINT_ACCELEROMETER_PATH)
 
-    Lectura de los datos del giroscopio:
+    Reading gyroscope data:
 
     >>> gyroscope = read_checkpoint(CHECKPOINT_GYROSCOPE_PATH)
 
-    Lectura de los datos del magnetómetro:
+    Reading magnetometer data:
 
     >>> magnetometer = read_checkpoint(CHECKPOINT_MAGNETOMETER_PATH)
 
-    Lectura de los datos del WiFi:
+    Reading Wi-Fi data:
 
     >>> wifi = read_checkpoint(CHECKPOINT_WIFI_PATH)
     """
