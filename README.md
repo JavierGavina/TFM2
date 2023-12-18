@@ -56,7 +56,6 @@ The image above shows a map of the floor and the location of various data refere
 
 A file is generated for each reference point, and once the data is collected using an Android device (mobile, tablet, ...), <u>it is manually transferred</u> to the following directory (in both train and test):
 
-
 ```python
 data
 ├── train
@@ -279,7 +278,7 @@ A moving average is applied in windows of 30 seconds with a 5-second overlap, sm
 Finally, the <b>raw_radiomap.csv</b> (unscaled) and <b>processed_radiomap.csv</b> (scaled) files are obtained
 
 
-## Datos de particiones en Train 
+## Partition data on Train
 
 Also, in the project, it has been proposed to test other alternatives by creating multiple train and test partitions using the same data collected in train. This allows studying the effects on data collection for similar time periods.
 
