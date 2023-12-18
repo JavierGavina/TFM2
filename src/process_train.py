@@ -2,9 +2,9 @@ import os
 
 import warnings
 
-from utils.constants import constants
-from utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
-from utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
+from src.utils.constants import constants
+from src.utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
+from src.utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi, get_checkpoints_data
 
 # Definición de las constantes de los directorios
 CHECKPOINT_DATA_PATH = constants.data.train.CHECKPOINT_DATA_PATH
@@ -19,7 +19,7 @@ labels_dictionary_meters = constants.labels_dictionary_meters
 warnings.filterwarnings("ignore")
 
 
-def main():
+def processTrain():
     get_checkpoints_data(constants.data.train.INITIAL_DATA, labels_dictionary_meters)
 
     wifi_data = read_checkpoint(WIFI_CHECKPOINT, constants.labels_train)
@@ -48,6 +48,3 @@ def main():
     os.makedirs(constants.data.train.PROC_OUT_PATH, exist_ok=True)  # Creamos el directorio procesado
     proc_wifi.to_csv(f"{constants.data.train.PROC_OUT_PATH}/processed_radiomap.csv", index=False)
 
-
-if __name__ == "__main__":
-    main()

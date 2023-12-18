@@ -5,11 +5,8 @@ import os
 import glob
 
 import tqdm
-import sys
 
-sys.path.append("..")
-
-from utils.constants import constants
+from src.utils.constants import constants
 
 
 def parse_windows(n_max: int, window_size: int, step: int):
@@ -128,7 +125,7 @@ def correctWifiFP(wifi_data: pd.DataFrame, t_max_sampling: int, dict_labels_to_m
         {'Label': labels, 'AppTimestamp(s)': intervalos_tiempo, 'Name_SSID': ssids})  # Dataframe de intervalos
 
     aux["AppTimestamp(s)"] = aux["AppTimestamp(s)"].round()  # Redondeamos el timestamp a 0 decimales
-    aux = aux.groupby(["Label", "AppTimestamp(s)", "Name_SSID"]).mean()[
+    aux = aux.groupby(["Label", "AppTimestamp(s)", "Name_SSID"]).mean(numeric_only=True)[
         "RSS"].reset_index()  # Agrupamos por label, timestamp y ssid
     aux_corrected = pd.merge(df_intervalos, aux, on=["Label", "AppTimestamp(s)", "Name_SSID"],
                              how="left")  # Unimos con el dataframe de intervalos
@@ -253,7 +250,8 @@ def interpolacion_pixel_proximo(data: pd.DataFrame, threshold: int) -> pd.DataFr
                         if left_values[idx_max_left] == right_values[idx_min_right]:
                             query.at[t, ap] = left_values[idx_max_left]
 
-        interpolated_data = interpolated_data.append(query)
+        # interpolated_data = interpolated_data.append(query) bug compatibilidad pandas
+        interpolated_data = pd.concat([interpolated_data, query])
 
     return interpolated_data
 

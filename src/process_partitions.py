@@ -2,9 +2,9 @@ import os
 
 import warnings
 
-from utils.constants import constants
-from utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
-from utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi
+from src.utils.constants import constants
+from src.utils.preprocess import correctWifiFP, read_checkpoint, interpolacion_pixel_proximo
+from src.utils.preprocess import fix_na_wifi, rolling_mean, scale_wifi
 
 # Cogemos los ssids que han aparecido en más de una recogida de datos
 lista_ssid_candidatos = constants.aps
@@ -24,10 +24,9 @@ labels_test_10vs13 = [x for x in range(23) if x not in constants.labels_partitio
 labels_test_15vs8 = [x for x in range(23) if x not in constants.labels_partition_15vs8]
 
 warnings.filterwarnings("ignore")
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-def main():
+def processPartitions():
     os.makedirs("data/partitions", exist_ok=True)
     os.makedirs(part_5vs18, exist_ok=True)
     os.makedirs(f"{part_5vs18}/train", exist_ok=True)
@@ -172,7 +171,3 @@ def main():
     part_15v8_test_proc = scale_wifi(part_15v8_test)
     part_15v8_test_proc = rolling_mean(part_15v8_test_proc, window_size=30, step=5)
     part_15v8_test_proc.to_csv(f"{part_15vs8}/test/processed/processed_radiomap.csv", index=False)
-
-
-if __name__ == "__main__":
-    main()

@@ -2,12 +2,12 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
 import numpy as np
-import sys
+
 import os
 from multiprocessing import cpu_count
 import matplotlib.pyplot as plt
 
-from utils.constants import constants
+from src.utils.constants import constants
 
 part_5vs18 = constants.data.partitions.PARTITION_5VS18
 part_10vs13 = constants.data.partitions.PARTITION_10VS13
@@ -15,14 +15,8 @@ part_15vs8 = constants.data.partitions.PARTITION_15VS8
 
 dict_inv = {v: k for k, v in constants.labels_dictionary_meters.items()}
 
-# print dataframe options to display all columns
-pd.set_option('display.max_columns', None)
 
-# print dataframe options to display all rows
-pd.set_option('display.max_rows', None)
-
-
-def main():
+def getPositioningWithPartitions():
     path_partitions_output = "outputs/positioning_partitions"
     os.makedirs(path_partitions_output, exist_ok=True)
 
@@ -83,10 +77,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn1_5vs18_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=1)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=1)", "Partition": "5vs18", "Label": label,
+                                                            "Mean Euclid": mean_euclid,
+                                                            "Std Euclid": std_euclid}, index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=1)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -94,10 +92,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn1_10vs13_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=1)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=1)", "Partition": "10vs13", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=1)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -105,10 +107,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn1_15vs8_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=1)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=1)", "Partition": "15vs8", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=1)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_5vs18, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -116,10 +122,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn5_5vs18_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=5)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=5)", "Partition": "5vs18", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=5)", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -127,10 +137,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn5_10vs13_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=5)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=5)", "Partition": "10vs13", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=5)", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -138,10 +152,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((knn5_15vs8_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "KNN(k=5)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "KNN(k=5)", "Partition": "15vs8", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "KNN(k=5)", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_5vs18, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -149,11 +167,14 @@ def main():
         euclidean_distances = np.sqrt(np.sum((rf_5vs18_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "RF", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "RF", "Partition": "5vs18", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "RF", "Partition": "5vs18", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_10vs13, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -161,10 +182,15 @@ def main():
         euclidean_distances = np.sqrt(np.sum((rf_10vs13_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "RF", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "RF", "Partition": "10vs13", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "RF", "Partition": "10vs13", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     for idx, pos in enumerate(np.unique(ytest_15vs8, axis=0)):
         label = dict_inv[(pos[0], pos[1])]
@@ -172,13 +198,17 @@ def main():
         euclidean_distances = np.sqrt(np.sum((rf_15vs8_pred[idxs_coord] - pos) ** 2, axis=1))
         mean_euclid = np.mean(euclidean_distances)
         std_euclid = np.std(euclidean_distances)
-        tabla_metricas_per_coord = tabla_metricas_per_coord.append(
-            {"Model": "RF", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
-             "Std Euclid": std_euclid},
-            ignore_index=True)
+        tabla_metricas_per_coord = pd.concat([tabla_metricas_per_coord,
+                                              pd.DataFrame({"Model": "RF", "Partition": "15vs8", "Label": label,
+                                                            "Mean Euclid": mean_euclid, "Std Euclid": std_euclid},
+                                                           index=[idx])])
+        # tabla_metricas_per_coord = tabla_metricas_per_coord.append(
+        #     {"Model": "RF", "Partition": "15vs8", "Label": label, "Mean Euclid": mean_euclid,
+        #      "Std Euclid": std_euclid},
+        #     ignore_index=True)
 
     tabla_metricas = tabla_metricas_per_coord.groupby(["Model", "Partition"]) \
-        .mean()[["Mean Euclid", "Std Euclid"]] \
+        .mean(numeric_only=True)[["Mean Euclid", "Std Euclid"]] \
         .reset_index()
     tabla_metricas.to_csv(f"{path_partitions_output}/tablas/tabla_metricas.csv", index=False)
 
@@ -228,7 +258,3 @@ def main():
     plt.xticks(rotation=15)
     plt.savefig(f"{path_partitions_output}/plots/barplot metrics.png")
     plt.show()
-
-
-if __name__ == "__main__":
-    main()
