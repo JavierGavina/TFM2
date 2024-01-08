@@ -34,7 +34,7 @@ def parse_windows(n_max: int, window_size: int, step: int):
     >>> parse_windows(n_max=10, window_size=5, step=2)
     >>> [(0, 5), (2, 7), (4, 9)]
 
-    >>> Parse_windows(n_max=30, window_size=10, step=5)
+    >>> parse_windows(n_max=30, window_size=10, step=5)
     >>> [(0, 10), (5, 15), (10, 20), (15, 25), (20, 30)]
     """
     return [(i, min(i + window_size, n_max)) for i in range(0, n_max, step) if i + window_size <= n_max]
@@ -62,7 +62,7 @@ def get_checkpoints_data(dir_data: str, out_dir: str, dict_labels) -> None:
     --------
     >>> dir_data = '/path/to/data'
     >>> dict_labels = {'label1': (lat1, lon1), 'label2': (lat2, lon2), ...}
-    >>> Get_checkpoints_data(dir_data, dict_labels)
+    >>> get_checkpoints_data(dir_data, dict_labels)
     """
     CHECKPOINT_DATA_PATH = f"{out_dir}/checkpoint_groundtruth"
     WIFI_CHECKPOINT = f"{CHECKPOINT_DATA_PATH}/Wifi"
@@ -244,8 +244,7 @@ def rolling_mean(data: pd.DataFrame, window_size: int, step: int) -> pd.DataFram
                                  step=step)  # Window combinations
     data_columns = ["AppTimestamp(s)"] + constants.aps + ["Latitude", "Longitude", "Label"]  # Data columns
     rolled_data = pd.DataFrame(columns=data_columns)  # Empty DataFrame
-    for lon, lat, lab in data[
-        ["Longitude", "Latitude", "Label"]].drop_duplicates().values:  # Iterate over each unique coordinate
+    for lon, lat, lab in data[["Longitude", "Latitude", "Label"]].drop_duplicates().values:  # Iterate over each unique coordinate
         query = data[(data["Longitude"] == lon) & (data["Latitude"] == lat)]  # Filter by coordinate
         for start, end in combinations:  # Iterate over each window combination
             aux = query[(query["AppTimestamp(s)"] >= start) & (query["AppTimestamp(s)"] < end)]  # Filter by window
