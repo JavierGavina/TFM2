@@ -102,9 +102,7 @@ def correctWifiFP(wifi_data: pd.DataFrame, t_max_sampling: int, dict_labels_to_m
     """ 
     Takes the fingerprint of the data and applies the following preprocessing: 
         1) Adjusts the sampling frequency to 1 sample / second: Calculates the mean grouped by second and by label for each of the beacons 
-        2) Adjusts missing data: Seconds without data collection are replaced by the minimum RSS of the dataset minus 1 
-        3) Scales the values between 0 and 1 (with 0 being the representation of the missing data):
-         X = (X - X_min + 1)/X_max
+        2) Adjusts missing data: Seconds without data collection are replaced by the minimum RSS of the dataset minus 1
          
     Parameters:
     -----------
@@ -136,7 +134,7 @@ def correctWifiFP(wifi_data: pd.DataFrame, t_max_sampling: int, dict_labels_to_m
     # We create a dataframe with all time intervals and all beacons
     labels, time_interval, ssids = [], [], []
     for lab in list_of_labels:
-        for ts in range(0, t_max_sampling + 1, 1):
+        for ts in range(0, t_max_sampling, 1):
             for ssid in constants.aps:
                 labels.append(lab)
                 time_interval.append(ts)
@@ -191,7 +189,8 @@ def fix_na_wifi(data: pd.DataFrame) -> pd.DataFrame:
 
 def scale_wifi(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Scales the Wi-Fi data within the DataFrame to a normalized range [0, 1].
+    Scales the Wi-Fi data within the DataFrame to a normalized range [0, 1] (with 0 being the representation of the missing data):
+         X = (X - X_min + 1)/X_max
 
     Parameters:
     -----------

@@ -6,6 +6,70 @@ from src.utils import preprocess
 from src.utils.constants import constants
 
 
+class TestUtilsPreprocess(unittest.TestCase):
+
+    def test_parse_windows(self):
+        """
+        This test checks if the windows are correctly parsed.
+        """
+        # Case 1
+        result = preprocess.parse_windows(10, 5, 2)
+        expected_result = [(0, 5), (2, 7), (4, 9)]
+        self.assertEqual(result, expected_result)
+
+        # Case 2
+        result = preprocess.parse_windows(10, 5, 5)
+        expected_result = [(0, 5), (5, 10)]
+        self.assertEqual(result, expected_result)
+
+        # Case 3
+        result = preprocess.parse_windows(10, 5, 100)
+        expected_result = [(0, 5)]
+        self.assertEqual(result, expected_result)
+
+    def test_get_checkpoint_data(self):
+        path_checkpoint_train = f"../{constants.data.train.CHECKPOINT_DATA_PATH}/Wifi"
+        path_checkpoint_test = f"../{constants.data.test.CHECKPOINT_DATA_PATH}/Wifi"
+
+        wifi_out_train = sorted(os.listdir(path_checkpoint_train))
+        wifi_out_test = sorted(os.listdir(path_checkpoint_test))
+
+        expected_out_train = sorted([f"Wifi_label_{x}.csv" for x in constants.labels_train])
+        expected_out_test = sorted([f"Wifi_label_{x}.csv" for x in constants.labels_test])
+
+        self.assertEqual(wifi_out_train, expected_out_train,
+                         msg="The checkpoint data for train is not the expected")
+        self.assertEqual(wifi_out_test, expected_out_test,
+                         msg="The checkpoint data for test is not the expected")
+
+        wifi_checkpoint_0_columns = pd.read_csv(f"{path_checkpoint_train}/{wifi_out_train[0]}").columns.tolist()
+        expected_columns = ["AppTimestamp(s)", "Name_SSID", "MAC_BSSID", "RSS", "Label", "Latitude", "Longitude"]
+
+        self.assertEqual(wifi_checkpoint_0_columns, expected_columns,
+                         msg="The columns for the checkpoint data for train is not the expected")
+
+    def test_correctWifiFP(self):
+        """
+        This test checks if the Wi-Fi data from the checkpoint is correctly corrected (adapted to a Fingerprint format).
+        """
+
+        # read wifi data
+        wifi_data = pd.read_csv(f"../{constants.data.train.CHECKPOINT_DATA_PATH}/Wifi/Wifi_label_0.csv")
+        # correct wifi data
+        corrected_wifi_data = preprocess.correctWifiFP(wifi_data, constants.T_MAX_SAMPLING, constants.labels_dictionary_meters)
+
+        # check if the columns are the expected
+        expected_columns = ["AppTimestamp(s)"] + constants.aps + ["Latitude", "Longitude", "Label"]
+        self.assertEqual(corrected_wifi_data.columns.tolist(), expected_columns,
+                            msg="The columns for the corrected wifi data are not the expected")
+
+        # check if we have an AppTimestamp for each second
+        self.assertEqual(corrected_wifi_data["AppTimestamp(s)"].nunique(), constants.T_MAX_SAMPLING,
+                            msg="The number of AppTimestamp(s) for the corrected wifi data is not the expected")
+
+
+
+
 class TestDirectories(unittest.TestCase):
     """
     This class contains tests to verify the existence of necessary directories and files.
@@ -30,6 +94,7 @@ class TestProcessOutputs(unittest.TestCase):
     """
     This class contains tests to verify the outputs of the data processing steps.
     """
+
     def test_process_train(self):
         """
         This test checks if the processed training data is correctly saved in the expected directories.
@@ -82,7 +147,7 @@ class TestProcessOutputs(unittest.TestCase):
         self.assertEqual(processed_radiomap_test_labels, expected,
                          msg="The labels from processed_radiomap and initial_rp_data are different")
 
-    def test_process_partitions(self):
+    def test_process_partitions_dir(self):
         """
         This test checks if the data partitions are correctly saved in the expected directories.
         """
@@ -92,6 +157,19 @@ class TestProcessOutputs(unittest.TestCase):
                         msg="The partitions directory does not exist"),
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_5VS18}"),
                         msg=f"{constants.data.partitions.PARTITION_5VS18} does not exist")
+
+        self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_10VS13}"),
+                        msg=f"{constants.data.partitions.PARTITION_10VS13} does not exist")
+
+        self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_15VS8}"),
+                        msg=f"{constants.data.partitions.PARTITION_15VS8} does not exist")
+
+    def test_partition_5vs18(self):
+        """
+        This test checks if the partition 5vs18 is correctly saved in the expected directories.
+        """
+
+        # Check the partition 5vs18 is correctly saved
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_5VS18}/train"),
                         msg=f"{constants.data.partitions.PARTITION_5VS18}/train does not exist")
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_5VS18}/train/raw"),
@@ -104,8 +182,41 @@ class TestProcessOutputs(unittest.TestCase):
                         msg=f"{constants.data.partitions.PARTITION_5VS18}/test/raw does not exist")
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_5VS18}/test/processed"),
                         msg=f"{constants.data.partitions.PARTITION_5VS18}/test/processed does not exist")
-        self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_10VS13}"),
-                        msg=f"{constants.data.partitions.PARTITION_10VS13} does not exist")
+
+        # Check the labels from constants and from outputs are the same
+        raw_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_5VS18}/train/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_5VS18}/train/processed/processed_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        raw_radiomap_test_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_5VS18}/test/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_test_labels = sorted(
+            pd.read_csv(f"../{constants.data.partitions.PARTITION_5VS18}/test/processed/processed_radiomap.csv")
+            .Label.unique().astype(int).tolist())
+
+        expected_train = sorted(constants.labels_partition_5vs18)
+        expected_test = sorted([x for x in constants.labels_train if x not in expected_train])
+
+        self.assertEqual(raw_radiomap_train_labels, expected_train,
+                         msg="The labels from raw_radiomap on partition 5vs18 train and expected labels are different")
+        self.assertEqual(processed_radiomap_train_labels, expected_train,
+                         msg="The labels from processed_radiomap on partition 5vs18 train and expected labels are different")
+        self.assertEqual(raw_radiomap_test_labels, expected_test,
+                         msg="The labels from raw_radiomap on partition 5vs18 test and expected labels are different")
+        self.assertEqual(processed_radiomap_test_labels, expected_test,
+                         msg="The labels from processed_radiomap on partition 5vs18 test and expected labels are different")
+
+    def test_partition_10vs13(self):
+        """
+        This test checks if the partition 10vs13 is correctly saved in the expected directories.
+        """
+
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_10VS13}/train"),
                         msg=f"{constants.data.partitions.PARTITION_10VS13}/train does not exist")
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_10VS13}/train/raw"),
@@ -118,8 +229,41 @@ class TestProcessOutputs(unittest.TestCase):
                         msg=f"{constants.data.partitions.PARTITION_10VS13}/test/raw does not exist")
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_10VS13}/test/processed"),
                         msg=f"{constants.data.partitions.PARTITION_10VS13}/test/processed does not exist")
-        self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_15VS8}"),
-                        msg=f"{constants.data.partitions.PARTITION_15VS8} does not exist")
+
+        # Check the labels from constants and from outputs are the same
+        raw_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_10VS13}/train/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_10VS13}/train/processed/processed_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        raw_radiomap_test_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_10VS13}/test/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_test_labels = sorted(
+            pd.read_csv(f"../{constants.data.partitions.PARTITION_10VS13}/test/processed/processed_radiomap.csv")
+            .Label.unique().astype(int).tolist())
+
+        expected_train = sorted(constants.labels_partition_10vs13)
+        expected_test = sorted([x for x in constants.labels_train if x not in expected_train])
+
+        self.assertEqual(raw_radiomap_train_labels, expected_train,
+                         msg="The labels from raw_radiomap on partition 10vs13 train and expected labels are different")
+        self.assertEqual(processed_radiomap_train_labels, expected_train,
+                         msg="The labels from processed_radiomap on partition 10vs13 train and expected labels are different")
+        self.assertEqual(raw_radiomap_test_labels, expected_test,
+                         msg="The labels from raw_radiomap on partition 10vs13 test and expected labels are different")
+        self.assertEqual(processed_radiomap_test_labels, expected_test,
+                         msg="The labels from processed_radiomap on partition 10vs13 test and expected labels are different")
+
+    def test_partition_15vs8(self):
+        """
+        This test checks if the partition 15vs8 is correctly saved in the expected directories.
+        """
+
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_15VS8}/train"),
                         msg=f"{constants.data.partitions.PARTITION_15VS8}/train does not exist")
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_15VS8}/train/raw"),
@@ -133,35 +277,37 @@ class TestProcessOutputs(unittest.TestCase):
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_15VS8}/test/processed"),
                         msg=f"{constants.data.partitions.PARTITION_15VS8}/test/processed does not exist")
 
+        # Check the labels from constants and from outputs are the same
+        raw_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_15VS8}/train/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_train_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_15VS8}/train/processed/processed_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        raw_radiomap_test_labels = sorted(
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_15VS8}/test/raw/raw_radiomap.csv").Label.unique().astype(
+                int).tolist())
+        processed_radiomap_test_labels = sorted(
+            pd.read_csv(f"../{constants.data.partitions.PARTITION_15VS8}/test/processed/processed_radiomap.csv")
+            .Label.unique().astype(int).tolist())
 
-# class TestOutputsDirectories(unittest.TestCase):
-#
-#     def test_directories(self):
-#         self.assertTrue(os.path.exists("output"))
-#         self.assertTrue(os.path.exists("output/data"))
-#         self.assertTrue(os.path.exists("output/data/train"))
-#         self.assertTrue(os.path.exists("output/data/test"))
-#         self.assertTrue(os.path.exists("output/data/partitions"))
-#         self.assertTrue(os.path.exists("output/positioning_partitions"))
+        expected_train = sorted(constants.labels_partition_15vs8)
+        expected_test = sorted([x for x in constants.labels_train if x not in expected_train])
 
+        self.assertEqual(raw_radiomap_train_labels, expected_train,
+                         msg="The labels from raw_radiomap on partition 15vs8 train and expected labels are different")
 
-class TestUtilsSource(unittest.TestCase):
+        self.assertEqual(processed_radiomap_train_labels, expected_train,
+                         msg="The labels from processed_radiomap on partition 15vs8 train and expected labels are different")
 
-    def test_parse_windows(self):
-        # Case 1
-        result = preprocess.parse_windows(10, 5, 2)
-        expected_result = [(0, 5), (2, 7), (4, 9)]
-        self.assertEqual(result, expected_result)
+        self.assertEqual(raw_radiomap_test_labels, expected_test,
+                         msg="The labels from raw_radiomap on partition 15vs8 test and expected labels are different")
 
-        # Case 2
-        result = preprocess.parse_windows(10, 5, 5)
-        expected_result = [(0, 5), (5, 10)]
-        self.assertEqual(result, expected_result)
-
-        # Case 3
-        result = preprocess.parse_windows(10, 5, 100)
-        expected_result = [(0, 5)]
-        self.assertEqual(result, expected_result)
+        self.assertEqual(processed_radiomap_test_labels, expected_test,
+                         msg="The labels from processed_radiomap on partition 15vs8 test and expected labels are different")
 
 
 if __name__ == '__main__':
