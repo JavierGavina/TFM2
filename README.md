@@ -10,6 +10,32 @@ This work involves research, design, implementation, and evaluation of a system 
 
 With the continued growth of the Internet of Things (IoT) and the increasing demand for precise positioning systems in indoor environments, this project contributes significantly to the field of WiFi-based geolocation by addressing the challenge of innovatively and effectively expanding RSSI databases.
 
+## Requirements for the project
+
+The project has been developed using the following versions of the libraries:
+
+```markdown
+ipython==8.8.0
+keras==2.9.0
+matplotlib==3.6.3
+numpy==1.23.5
+pandas==1.5.3
+Pillow==9.4.0
+scikit_image==0.19.3
+scikit_learn==1.2.1
+scipy==1.11.4
+tensorflow_gpu==2.9.0
+tensorflow_intel==2.11.0
+tqdm==4.64.1
+```
+
+You can install all the libraries using the following command:
+
+```python
+pip install -r requirements.txt
+```
+
+
 ## Project Structure
 
 The entire structure of the project is based on 4 main directories:
