@@ -1,14 +1,27 @@
 # Generative AI Applied to Improve Position Estimation
 
-In the current era of wireless connectivity, the ubiquity of WiFi-based technologies has become integral to our daily lives. Location and geolocation play pivotal roles in numerous applications, ranging from indoor navigation to optimizing logistics in smart warehouses. WiFi Fingerprinting is a prevalent technique for estimating position in indoor environments, involving the creation of a database of Received Signal Strength Indicator (RSSI) signals at known reference points. However, the creation and maintenance of these databases can be resource-intensive.
+In the current era of wireless connectivity,
+the ubiquity of Wi-Fi based technologies has become integral to our daily lives.
+Location and geolocation play pivotal roles in numerous applications,
+ranging from indoor navigation to optimizing logistics in smart warehouses.
+Wi-Fi Fingerprinting is a prevalent technique for estimating position in indoor environments,
+involving the creation of a database of Received Signal Strength Indicator (RSSI) signals at known reference points.
+However, the creation and maintenance of these databases can be resource-intensive.
 
-This project addresses this challenge by employing conditional Generative Adversarial Networks (cGANs) to augment an RSSI signal database obtained through the "get_sensordata" application. This application collects WiFi signal information in specific environments, serving as a valuable tool for gathering training data for WiFi fingerprint-based positioning systems.
+This project addresses this challenge by employing conditional Generative Adversarial Networks
+(cGANs) to augment an RSSI signal database obtained through the "get_sensordata"
+application.
+This application collects Wi-Fi signal information in specific environments,
+serving as a valuable tool for gathering training data for Wi-Fi fingerprint-based positioning systems.
 
-The primary objective is to enhance indoor position estimation techniques by expanding the RSSI signal database through the synthetic generation of data using cGANs. The application of conditional GANs enables the generation of additional RSSI data that closely resembles real-world collected data, thereby improving the accuracy and robustness of WiFi fingerprint-based positioning systems.
+The primary objective is
+to enhance indoor position estimation techniques
+by expanding the RSSI signal database through the synthetic generation of data using cGANs.
+The application of conditional GANs enables the generation of additional RSSI data
+that closely resembles real-world collected data,
+thereby improving the accuracy and robustness of Wi-Fi fingerprint-based positioning systems.
 
 This work involves research, design, implementation, and evaluation of a system that integrates cGANs to augment the RSSI signal database and enhance indoor position estimation techniques. A comprehensive review of related literature will be conducted, a detailed work methodology will be presented, and experiments will be carried out to assess the effectiveness of the proposed technique.
-
-With the continued growth of the Internet of Things (IoT) and the increasing demand for precise positioning systems in indoor environments, this project contributes significantly to the field of WiFi-based geolocation by addressing the challenge of innovatively and effectively expanding RSSI databases.
 
 ## Requirements for the project
 
@@ -31,7 +44,7 @@ tqdm==4.64.1
 
 You can install all the libraries using the following command:
 
-```python
+```markdown
 pip install -r requirements.txt
 ```
 
@@ -50,12 +63,9 @@ The entire structure of the project is based on 4 main directories:
         <li><b>preprocessing_workflow.png:</b> Flowchart of the preprocessing process</li>
         <li><b>Project documentation.docx:</b> Word document with additional project documentation</li>
     </ul>
-    <li><b>outputs:</b> Directory where all project outputs are stored:</li>
+    <li><b>output:</b> Directory where all project outputs are stored:</li>
     <ul>
         <li>Preprocessed data</li>
-        <li>Images</li>
-        <li>Gifs</li>
-        <li>Model Checkpoints</li>
         <li>Metric Tables</li>
         <li>...</li>
     </ul>
@@ -67,7 +77,7 @@ The main scripts implemented for the project execution are:
 
 <li><b>obtainDataINITandPositioning.py: </b>Designed to be executed in the terminal in the following way:</li>
 
-```python
+```markdown
 python obtainDataINITandPositioning.py 
 ```
 
@@ -82,7 +92,7 @@ The image above shows a map of the floor and the location of various data refere
 
 A file is generated for each reference point, and once the data is collected using an Android device (mobile, tablet, ...), <u>it is manually transferred</u> to the following directory (in both train and test):
 
-```python
+```markdown
 data
 ├── train
 │   ├── initial_rp_data (TRAIN DATA)
@@ -222,26 +232,25 @@ The execution of these scripts will provide the following output directory in th
 (new files and directories marked with double asterisks)
 
 
-```python
+```markdown
 data
 |----train
 |	|---- initial_rp_data
-
 |	
 |---- test
 |	|---- initial_rp_data
 |
-|---- outputs **
+|---- output **
 |         |---- data **
 |         |       |---- train **
-|         |       |       |---- raw_radiommap **
+|         |       |       |---- raw_radiomap **
 |         |       |       |       |---- raw_radiomap.csv **
 |         |       |       |---- processed_radiomap **
 |         |       |       |       |---- processed_radiomap.csv **
 |         |       |       |---- checkpoint_groundtruth **
 |         |       |
 |         |       |---- test **
-|         |       |       |---- raw_radiommap **
+|         |       |       |---- raw_radiomap **
 |         |       |       |       |---- raw_radiomap.csv **
 |         |       |       |---- processed_radiomap **
 |         |       |       |       |---- processed_radiomap.csv **
@@ -255,14 +264,12 @@ implemented in the scripts <b>preprocess.py</b> and <b>constants.py </b>,
 which are located in the <b>src/utils</b> directory.
 
 
-```python
+```markdown
 root
 |
 |----data
 |
 |---- src
-|      |---- models
-|      |---- positioning
 |      |---- utils
 |      |       |---- preprocess.py
 |      |       |---- constants.py
@@ -285,13 +292,14 @@ Within the constants, in the script constants.py, it is important to correctly d
 <b>constants.data.test.CHECKPOINT_DATA_PATH:</b> Directory of test data checkpoints.
 <b>constants.data.test.RAW_OUT_PATH:</b> Directory of raw test radiomap.
 <b>constants.data.test.PROC_OUT_PATH:</b> Directory of scaled test radiomap.
-<b>constants.aps:</b> List of WiFi access points to consider for fingerprint acquisition.
+<b>constants.aps:</b> List of Wi-Fi access points to consider for fingerprint acquisition.
 <b>constants.labels_dictionary_meters:</b> Dictionary that transforms from label to coordinates in training.
 <b>constants.labels_dictionary_meters_test:</b> Dictionary that transforms from label to coordinates in test.
 <b>constants.labels_train:</b> List of labels (access points) to consider in training.
 <b>constants.labels_test:</b> List of labels (access points) to consider in test.
 <b>constants.T_MAX_SAMPLING:</b> Maximum time (in seconds) for sampling at each training label.
 <b>constants.T_MAX_SAMPLING_TEST:</b> Maximum time (in seconds) for sampling at each test label.
+
 Finally, using the methods described in <b>preprocess.py</b>, when running the scripts <b>process_train.py</b> and <b>process_test.py</b>, the execution flow will be as follows:
 
 <img src="info/preprocessing_workflow.png" alt="Execution flow of data preprocessing"></img>
@@ -299,68 +307,72 @@ Finally, using the methods described in <b>preprocess.py</b>, when running the s
 The process can be summarized as follows:
 
 Log files from <b>get_sensordata</b> are processed to transform them into a format where each row represents the fingerprint of a second, as the average of all RSS observations in that period for each access point (AP).
-The resulting NAs are replaced by the global minimum value - 1. This is done so that later, with scaling, 0 represents the absence of RSS.
+The resulting NA's are replaced by the global minimum value - 1. This is done so that later, with scaling, 0 represents the absence of RSS.
 A moving average is applied in windows of 30 seconds with a 5-second overlap, smoothing the RSS values.
 Finally, the <b>raw_radiomap.csv</b> (unscaled) and <b>processed_radiomap.csv</b> (scaled) files are obtained
 
 
 ## Partition data on Train
 
-Also, in the project, it has been proposed to test other alternatives by creating multiple train and test partitions using the same data collected in train. This allows studying the effects on data collection for similar time periods.
+Also, in the project, it has been proposed
+to test other alternatives by creating multiple trains and 
+test partitions using the same data collected in train.
+This allows studying the effects on data collection for similar time periods.
 
 To achieve this, the script <b>process_partitions.py</b> has been implemented. The purpose of this script is to obtain the following output directory by applying the same preprocessing steps as in the case of train but with different reference points.
 
 The script returns the following directory:
 
 
-```python
+```markdown
 root
 |
 |----data
 |     |----train
 |     |---- test
-|---- outputs **
+|---- output **
 |      |---- data **
+|      |       |---- train 
+|      |       |---- test
 |      |       |---- partitions **
-|---- partitions **
-|	      |---- partition_5vs18
-|	      |		   |---- train
-|	      |		   |       |---- raw
-|	      |		   |       |	  |---- raw_radiomap.csv
-|	      |		   |       |---- processed
-|	      |		   |       |	  |---- processed_radiomap.csv
-|	      |		   |       |	  |
-|	      |	   	   |---- test
-|	      |		   |       |---- raw
-|	      |	   	   |       |	  |---- raw_radiomap.csv
-|	      |	   	   |       |---- processed
-|	      |	   	   |       |	  |---- processed_radiomap.csv
-|	      |	   	   |       |	 
-|	      |---- partition_10vs13
-|	      |	   	   |---- train
-|	      |	   	   |       |---- raw
-|	      |	   	   |       |      |---- raw_radiomap.csv
-|	      |	   	   |       |---- processed
-|	      |	   	   |       |	  |---- processed_radiomap.csv
-|	      |	   	   |       |	  |
-|	      |	   	   |---- test
-|	      |	   	   |       |---- raw
-|	      |	   	   |       |	  |---- raw_radiomap.csv
-|	      |	   	   |       |---- processed
-|	      |	   	   |       |	  |---- processed_radiomap.csv
-|	      |	   	   |       |	 
-|	      |---- partition_15vs8
-|	      |	   	   |---- train
-|	      |	   	   |       |---- raw
-|	      |	   	   |       |	  |---- raw_radiomap.csv
-|	      |	   	   |       |---- processed
-|	      |	   	   |       |	  |---- processed_radiomap.csv
-|	      |	   	   |       |	  |
-|	      |	   	   |---- test
-|	      |	   	   |       |---- raw
-|	      |	   	   |       |	  |---- raw_radiomap.csv
-|	      |	   	   |       |---- processed
-|	      |	   	   |       |	  |---- processed_radiomap.csv
+|      |       |         |---- partition_5vs18 **
+|      |       |         |          |---- train **
+|      |       |         |          |       |---- raw **
+|      |       |         |          |       |      |----raw_radiomap.csv **
+|      |       |         |          |       |----processed **
+|      |       |         |          |       |      |----rocessed_radiomap.csv **
+|      |       |         |          |       |
+|      |       |         |          |----test **
+|      |       |         |          |       |----raw **
+|      |       |         |          |       |     |----raw_radiomap.csv **
+|      |       |         |          |       |----processed **
+|      |       |         |          |       |     |----processed_radiomap.csv **
+|      |       |         |	 
+|      |       |         |---- partition_10vs13 **
+|      |       |         |          |---- train **
+|      |       |         |          |       |---- raw **
+|      |       |         |          |       |      |---- raw_radiomap.csv **
+|      |       |         |          |       |---- processed **
+|      |       |         |          |       |      |---- processed_radiomap.csv **
+|      |       |         |          |       |
+|      |       |         |          |----test **
+|      |       |         |          |       |---- raw **
+|      |       |         |          |       |      |---- raw_radiomap.csv **
+|      |       |         |          |       |---- processed **
+|      |       |         |          |       |      |---- processed_radiomap.csv **
+|      |       |         |
+|      |       |         |---- partition_15vs8 **
+|      |       |         |          |---- train **
+|      |       |         |          |       |---- raw **
+|      |       |         |          |       |      |---- raw_radiomap.csv **
+|      |       |         |          |       |---- processed **
+|      |       |         |          |       |      |---- processed_radiomap.csv **
+|      |       |         |          |       |
+|      |       |         |          |----test **
+|      |       |         |          |       |---- raw **
+|      |       |         |          |       |     |---- raw_radiomap.csv **
+|      |       |         |          |       |---- processed **
+|      |       |         |          |       |     |---- processed_radiomap.csv **
 
 ```
 
@@ -417,17 +429,17 @@ For the proper functioning of the script <b>process_partitions.py</b>, it is ess
 ## Positioning Estimation by Partitions
 
 For position estimation, the script <b>positioning_partitions.py</b> has been implemented within the <b>src</b> directory.
-This script is responsible for estimating the position in each of the train partitions and returning the metric tables and positioning error graphs to the directory <b>outputs/positioning_partitions</b>.
+This script is responsible for estimating the position in each of the train partitions and returning the metric tables and positioning error graphs to the directory <b>output/positioning_partitions</b>.
 
 
-```python
+```markdown
 root
 |
 |----data
 |
 |---- src
 |    
-|---- outputs 
+|---- output 
 |      |---- data
 |      |---- positioning_partitions **
 |      |       |---- tables **
@@ -439,11 +451,11 @@ root
 |      |               |---- errorbar_metrics.png **
 ```
 
-After executing the script, we obtain the following graphs in the directory <b>outputs/positioning_partitions/plots</b> that define the error obtained in the position estimation:
+After executing the script, we obtain the following graphs in the directory <b>output/positioning_partitions/plots</b> that define the error obtained in the position estimation:
 
 <img src="output/positioning_partitions/plots/errorbar_metrics.png" alt="Errorbar of positioning error metrics"></img>
 <img src="output/positioning_partitions/plots/barplot metrics.png" alt="Barplot of positioning error metrics"></img>
 
 The first graph shows the positioning error for each model in each coordinate, sorted from lowest to highest error. In this case, the models kNN(K=1), KNN(K=5), and RF(n_estimators=500) are represented with orange, green, and purple colors, respectively. This graph is used to display the positioning error in each partition of the study, allowing a comparison of the results obtained in each. For each point, the mean (colored dot) and standard deviation (vertical bar) of the positioning error in each partition are represented.
 
-On the other hand, the second graph shows the error in a bar chart for each model and partition. In this case, the average positioning error for each model in each partition is represented, along with the standard deviation of the positioning error in each partition. This allows a comparison of the average positioning erro
+On the other hand, the second graph shows the error in a bar chart for each model and partition. In this case, the average positioning error for each model in each partition is represented, along with the standard deviation of the positioning error in each partition. This allows a comparison of the average positioning error
