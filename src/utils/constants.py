@@ -78,12 +78,12 @@ class Outputs:
             The directory for continuous reference maps.
     """
 
-    PATH_OUTPUTS = "outputs"
-    GENERATIVE_METRICS = "outputs/generative_metrics"
-    OUT_DATA = "outputs/data"
-    PARTITIONS = "outputs/data/partitions"
-    TRAIN_OUT = "outputs/data/train"
-    TEST_OUT = "outputs/data/test"
+    PATH_OUTPUTS = "output"
+    OUT_DATA = "output/data"
+    TRAIN_OUT = "output/data/train"
+    TEST_OUT = "output/data/test"
+    PARTITIONS = "output/data/partitions"
+    POSITIONING_PARTITIONS = "output/positioning_partitions"
 
 
 class constants:
