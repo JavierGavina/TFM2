@@ -56,17 +56,88 @@ class TestUtilsPreprocess(unittest.TestCase):
         # read wifi data
         wifi_data = pd.read_csv(f"../{constants.data.train.CHECKPOINT_DATA_PATH}/Wifi/Wifi_label_0.csv")
         # correct wifi data
-        corrected_wifi_data = preprocess.correctWifiFP(wifi_data, constants.T_MAX_SAMPLING, constants.labels_dictionary_meters)
+        corrected_wifi_data = preprocess.correctWifiFP(wifi_data, constants.T_MAX_SAMPLING,
+                                                       constants.labels_dictionary_meters)
 
         # check if the columns are the expected
         expected_columns = ["AppTimestamp(s)"] + constants.aps + ["Latitude", "Longitude", "Label"]
         self.assertEqual(corrected_wifi_data.columns.tolist(), expected_columns,
-                            msg="The columns for the corrected wifi data are not the expected")
+                         msg="The columns for the corrected wifi data are not the expected")
 
         # check if we have an AppTimestamp for each second
         self.assertEqual(corrected_wifi_data["AppTimestamp(s)"].nunique(), constants.T_MAX_SAMPLING,
-                            msg="The number of AppTimestamp(s) for the corrected wifi data is not the expected")
+                         msg="The number of AppTimestamp(s) for the corrected wifi data is not the expected")
 
+    def check_fix_na_wifi(self):
+        """
+        This test checks if the Wi-Fi data has correct the NA values.
+        """
+
+        # read wifi data and fix NA values
+        wifi_data = preprocess.read_checkpoint(f"../{constants.data.train.CHECKPOINT_DATA_PATH}/Wifi",
+                                               constants.labels_train)
+        wifi_corrected = preprocess.correctWifiFP(wifi_data=wifi_data,
+                                                  t_max_sampling=constants.t_max_sampling,
+                                                  dict_labels_to_meters=constants.labels_dictionary_meters)
+        wifi_corrected = preprocess.fix_na_wifi(wifi_corrected)
+
+        # check if there exists NA values
+        self.assertFalse(wifi_corrected.isna().values.any(),
+                         msg="There are NA values in the corrected wifi data")
+
+    def test_scale_wifi(self):
+        """
+        This test checks if the Wi-Fi data is correctly scaled to the range of [0-1].
+        """
+        processed_wifi = pd.read_csv(f"../{constants.data.train.PROC_OUT_PATH}/processed_radiomap.csv")
+
+        # check if the values are in the range of [0-1]
+        self.assertTrue((processed_wifi[constants.aps] >= 0).all().all(),
+                        msg="There are values lower than 0 in the processed wifi data")
+        self.assertTrue((processed_wifi[constants.aps] <= 1).all().all(),
+                        msg="There are values higher than 1 in the processed wifi data")
+
+    def test_rolling_mean(self):
+        """
+        This test checks if the rolling mean is correctly applied to the Wi-Fi data.
+
+        If we have 10 s of data, and we want to apply a rolling mean with the parameters n_max=10, window_size=5, step_size=5,
+        it should return two windows of 5 s each one, and the AppTimestamp(s) should be [5, 10]
+
+        """
+
+        input_data = pd.DataFrame({
+            "AppTimestamp(s)": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            "GEOTECWIFI03": [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2],
+            "480Invitados": [3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4],
+            "eduroam": [5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6],
+            "wpen-uji": [9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10],
+            "lt1iot": [11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12],
+            "cuatroochenta": [13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14],
+            "UJI": [15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16],
+            "Latitude": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "Longitude": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "Label": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        })
+
+        expected_output = pd.DataFrame({
+            "AppTimestamp(s)": [5.0, 10.0],
+            "GEOTECWIFI03": [1.0, 2.0],
+            "480Invitados": [3.0, 4.0],
+            "eduroam": [5.0, 6.0],
+            "wpen-uji": [9.0, 10.0],
+            "lt1iot": [11.0, 12.0],
+            "cuatroochenta": [13.0, 14.0],
+            "UJI": [15.0, 16.0],
+            "Latitude": [0.0, 0.0],
+            "Longitude": [0.0, 0.0],
+            "Label": [0.0, 0.0]
+        })
+
+        result = preprocess.rolling_mean(input_data, window_size=5, step=5)
+        print(result)
+        self.assertTrue(result.equals(expected_output),
+                        msg="The rolling mean is not correctly applied to the Wi-Fi data")
 
 
 
