@@ -1,13 +1,9 @@
 import unittest
-import sys
 import os
+import pandas as pd
 
-from src.process_train import processTrain
-from src.process_test import processTest
-from src.process_partitions import processPartitions
-from src.positioning_partitions import getPositioningWithPartitions
 from src.utils import preprocess
-from src.utils import constants
+from src.utils.constants import constants
 
 
 class TestDirectories(unittest.TestCase):
@@ -27,11 +23,37 @@ class TestDirectories(unittest.TestCase):
 class TestProcessOutputs(unittest.TestCase):
 
     def test_process_train(self):
-        processTrain()
-        self.assertTrue(os.path.exists("data"), "The data directory does not exist")
-        self.assertTrue(os.path.exists("data/train"), "The data/train directory does not exist")
-        self.assertEqual(os.listdir("data/train"), ["checkpoint_groundtruth", "processed_radiomap", "raw_radiomap"],
-                         "The data/train should have checkpoint_groundtruth, processed_radiomap and raw_radiomap")
+        self.assertTrue(os.path.exists(f"../{constants.outputs.PATH_OUTPUTS}"), f"The {constants.outputs.PATH_OUTPUTS} directory does not exist")
+        self.assertTrue(os.path.exists(f"../{constants.outputs.OUT_DATA}"), f"The {constants.outputs.OUT_DATA} directory does not exist")
+        self.assertTrue(os.path.exists(f"../{constants.outputs.TRAIN_OUT}"), f"The {constants.outputs.TRAIN_OUT} directory does not exist")
+        self.assertEqual(os.listdir(f"../{constants.outputs.TRAIN_OUT}"),
+                         ["checkpoint_groundtruth", "processed_radiomap", "raw_radiomap"],
+                         f"The {constants.outputs.TRAIN_OUT} dir should have checkpoint_groundtruth, processed_radiomap and raw_radiomap")
+        raw_radiomap_train_labels = sorted(pd.read_csv(f"../{constants.data.train.RAW_OUT_PATH}/raw_radiomap.csv").Label.unique().astype(int).tolist())
+        processed_radiomap_train_labels = sorted(pd.read_csv(f"../{constants.data.train.PROC_OUT_PATH}/processed_radiomap.csv").Label.unique().astype(int).tolist())
+        expected = sorted([int(x.split(".")[0].split("_")[1])
+                           for x in os.listdir(f"../{constants.data.train.INITIAL_DATA}")
+                           if x.endswith(".txt")])
+        # Check the labels from resource and from outputs are the same
+        self.assertEqual(raw_radiomap_train_labels, expected, msg="The labels from raw_radiomap and initial_rp_data are different")
+        self.assertEqual(processed_radiomap_train_labels, expected, msg="The labels from processed_radiomap and initial_rp_data are different")
+
+    def test_process_test(self):
+        self.assertTrue(os.path.exists(f"../{constants.outputs.TEST_OUT}"), f"The {constants.outputs.TEST_OUT} directory does not exist")
+        self.assertEqual(os.listdir(f"../{constants.outputs.TEST_OUT}"),
+                         ["checkpoint_groundtruth", "processed_radiomap", "raw_radiomap"],
+                         f"The {constants.outputs.TEST_OUT} dir should have checkpoint_groundtruth, processed_radiomap and raw_radiomap")
+        raw_radiomap_test_labels = sorted(pd.read_csv(f"../{constants.data.test.RAW_OUT_PATH}/raw_radiomap.csv").Label.unique().astype(int).tolist())
+        processed_radiomap_test_labels = sorted(pd.read_csv(f"../{constants.data.test.PROC_OUT_PATH}/processed_radiomap.csv").Label.unique().astype(int).tolist())
+        expected = sorted([int(x.split(".")[0].split("_")[1])
+                           for x in os.listdir(f"../{constants.data.test.INITIAL_DATA}")
+                           if x.endswith(".txt")])
+        # Check the labels from resource and from outputs are the same
+        self.assertEqual(raw_radiomap_test_labels, expected, msg="The labels from raw_radiomap and initial_rp_data are different")
+        self.assertEqual(processed_radiomap_test_labels, expected, msg="The labels from processed_radiomap and initial_rp_data are different")
+
+    def test_process_partitions(self):
+
 
 
 # class TestOutputsDirectories(unittest.TestCase):
