@@ -77,7 +77,7 @@ class TestUtilsPreprocess(unittest.TestCase):
         wifi_data = preprocess.read_checkpoint(f"../{constants.data.train.CHECKPOINT_DATA_PATH}/Wifi",
                                                constants.labels_train)
         wifi_corrected = preprocess.correctWifiFP(wifi_data=wifi_data,
-                                                  t_max_sampling=constants.t_max_sampling,
+                                                  t_max_sampling=constants.T_MAX_SAMPLING,
                                                   dict_labels_to_meters=constants.labels_dictionary_meters)
         wifi_corrected = preprocess.fix_na_wifi(wifi_corrected)
 
@@ -138,7 +138,6 @@ class TestUtilsPreprocess(unittest.TestCase):
         print(result)
         self.assertTrue(result.equals(expected_output),
                         msg="The rolling mean is not correctly applied to the Wi-Fi data")
-
 
 
 class TestDirectories(unittest.TestCase):
@@ -306,17 +305,21 @@ class TestProcessOutputs(unittest.TestCase):
             pd.read_csv(
                 f"../{constants.data.partitions.PARTITION_10VS13}/train/raw/raw_radiomap.csv").Label.unique().astype(
                 int).tolist())
+
         processed_radiomap_train_labels = sorted(
             pd.read_csv(
                 f"../{constants.data.partitions.PARTITION_10VS13}/train/processed/processed_radiomap.csv").Label.unique().astype(
                 int).tolist())
+
         raw_radiomap_test_labels = sorted(
             pd.read_csv(
                 f"../{constants.data.partitions.PARTITION_10VS13}/test/raw/raw_radiomap.csv").Label.unique().astype(
                 int).tolist())
+
         processed_radiomap_test_labels = sorted(
-            pd.read_csv(f"../{constants.data.partitions.PARTITION_10VS13}/test/processed/processed_radiomap.csv")
-            .Label.unique().astype(int).tolist())
+            pd.read_csv(
+                f"../{constants.data.partitions.PARTITION_10VS13}/test/processed/processed_radiomap.csv").Label.unique().astype(
+                int).tolist())
 
         expected_train = sorted(constants.labels_partition_10vs13)
         expected_test = sorted([x for x in constants.labels_train if x not in expected_train])

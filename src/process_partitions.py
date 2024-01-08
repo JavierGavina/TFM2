@@ -60,7 +60,7 @@ def processPartitions():
                                     t_max_sampling=t_max_sampling,
                                     dict_labels_to_meters=constants.labels_dictionary_meters)  # Correct the Wi-Fi data and obtain the fingerprint format
 
-    part_5v18_train = fix_na_wifi(part_5v18_train) # Correct the Wi-Fi missing data (NaN = min - 1)
+    part_5v18_train = fix_na_wifi(part_5v18_train)  # Correct the Wi-Fi missing data (NaN = min - 1)
     part_5v18_train = proximity_pixel_interpolation(part_5v18_train, threshold=30)  # Wi-Fi data interpolation
 
     part_5v18_train_raw = rolling_mean(part_5v18_train, window_size=30,

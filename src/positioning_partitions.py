@@ -206,9 +206,9 @@ def getPositioningWithPartitions():
 
     aux = tabla_metricas.sort_values(by=["Mean Euclid"])
     aux["Model_Partition"] = aux["Model"] + "-" + aux["Partition"]
-    f = lambda x: "orange" if "KNN(k=1)" in x else "green" if "KNN(k=5)" in x else "purple"
+    color_func = lambda x: "orange" if "KNN(k=1)" in x else "green" if "KNN(k=5)" in x else "purple"
     # obtain an array of colors for each bar
-    colores = list(map(f, aux["Model_Partition"]))
+    colores = list(map(color_func, aux["Model_Partition"]))
     plt.figure(figsize=(10, 5))
     plt.title("Barplot error per each model-partition")
     plt.bar(aux["Model_Partition"], aux["Mean Euclid"], color=colores)
