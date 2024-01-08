@@ -36,7 +36,7 @@ def processTrain():
 
     raw_wifi = rolling_mean(wifi_corrected, window_size=30, step=5)
 
-    os.makedirs(constants.data.train.RAW_OUT_PATH, exist_ok=True)  # Creamos el directorio en bruto
+    os.makedirs(constants.data.train.RAW_OUT_PATH, exist_ok=True)  # Create the raw directory
     raw_wifi.to_csv(f"{constants.data.train.RAW_OUT_PATH}/raw_radiomap.csv", index=False)
 
     '''
@@ -46,5 +46,5 @@ def processTrain():
     proc_wifi = scale_wifi(wifi_corrected)
     proc_wifi = rolling_mean(proc_wifi, window_size=30, step=5)
 
-    os.makedirs(constants.data.train.PROC_OUT_PATH, exist_ok=True)  # Creamos el directorio procesado
+    os.makedirs(constants.data.train.PROC_OUT_PATH, exist_ok=True)  # Create the processed directory
     proc_wifi.to_csv(f"{constants.data.train.PROC_OUT_PATH}/processed_radiomap.csv", index=False)
