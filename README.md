@@ -75,10 +75,10 @@ The entire structure of the project is based on 4 main directories:
 
 The main scripts implemented for the project execution are:
 
-<li><b>obtainDataINITandPositioning.py: </b>Designed to be executed in the terminal in the following way:</li>
+<li><b>datasetINIT23_main.py: </b>Designed to be executed in the terminal in the following way:</li>
 
 ```markdown
-python obtainDataINITandPositioning.py 
+python datasetINIT23_main.py 
 ```
 
 This script will be responsible for processing the training and test data, creating training and test data partitions using the training data, and applying position estimation with the partitions. It will thus return the metric table, the metric table for each coordinate, and positioning error graphs
@@ -226,7 +226,7 @@ If we consider that each tile, represented by the gray grids in the image, measu
         <td>14.4</td>
 </table>
 
-Within the <b>src</b> directory, we have two Python scripts: <b>process_train.py</b> and <b>process_test.py</b>. Running each of these scripts (from the main directory script: <b>obtainDataINITandPositioning.py</b>) will perform all the preprocessing necessary to obtain the radiomap ready for training positioning models.
+Within the <b>src</b> directory, we have two Python scripts: <b>process_train.py</b> and <b>process_test.py</b>. Running each of these scripts (from the main directory script: <b>datasetINIT23_main.py</b>) will perform all the preprocessing necessary to obtain the radiomap ready for training positioning models.
 
 The execution of these scripts will provide the following output directory in the main <b>output</b> folder:
 (new files and directories marked with double asterisks)
@@ -279,7 +279,7 @@ root
 |      |---- process_partitions.py
 |      |---- positioning_partitions.py
 |
-|---- obtainDataINITandPositioning.py
+|---- datasetINIT23_main.py
 
 ```
 Within the constants, in the script constants.py, it is important to correctly define the following, suitable for the directory system in the project, for the preprocessing to be carried out correctly:

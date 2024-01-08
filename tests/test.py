@@ -7,8 +7,14 @@ from src.utils.constants import constants
 
 
 class TestDirectories(unittest.TestCase):
+    """
+    This class contains tests to verify the existence of necessary directories and files.
+    """
 
     def test_resources(self):
+        """
+        This test checks if the necessary directories and files exist in the correct locations.
+        """
         self.assertTrue(os.path.exists("../data"), "The data directory does not exist")
         self.assertTrue(os.path.exists("../data/train"), "The data/train directory does not exist")
         self.assertTrue(os.path.exists("../data/train/initial_rp_data"),
@@ -21,8 +27,14 @@ class TestDirectories(unittest.TestCase):
 
 
 class TestProcessOutputs(unittest.TestCase):
-
+    """
+    This class contains tests to verify the outputs of the data processing steps.
+    """
     def test_process_train(self):
+        """
+        This test checks if the processed training data is correctly saved in the expected directories.
+        """
+
         self.assertTrue(os.path.exists(f"../{constants.outputs.PATH_OUTPUTS}"),
                         f"The {constants.outputs.PATH_OUTPUTS} directory does not exist")
         self.assertTrue(os.path.exists(f"../{constants.outputs.OUT_DATA}"),
@@ -47,6 +59,10 @@ class TestProcessOutputs(unittest.TestCase):
                          msg="The labels from processed_radiomap and initial_rp_data are different")
 
     def test_process_test(self):
+        """
+        This test checks if the processed testing data is correctly saved in the expected directories.
+        """
+
         self.assertTrue(os.path.exists(f"../{constants.outputs.TEST_OUT}"),
                         f"The {constants.outputs.TEST_OUT} directory does not exist")
         self.assertEqual(os.listdir(f"../{constants.outputs.TEST_OUT}"),
@@ -67,6 +83,11 @@ class TestProcessOutputs(unittest.TestCase):
                          msg="The labels from processed_radiomap and initial_rp_data are different")
 
     def test_process_partitions(self):
+        """
+        This test checks if the data partitions are correctly saved in the expected directories.
+        """
+
+        # Check all the partitions directory exists
         self.assertTrue(os.path.exists(f"../{constants.outputs.PARTITIONS}"),
                         msg="The partitions directory does not exist"),
         self.assertTrue(os.path.exists(f"../{constants.data.partitions.PARTITION_5VS18}"),
